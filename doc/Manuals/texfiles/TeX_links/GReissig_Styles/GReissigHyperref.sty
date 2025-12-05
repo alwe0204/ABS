@@ -1,0 +1,63 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% $LastChangedDate: 2022-03-31 17:24:15 +0200 (Do, 31 Mär 2022) $ (local)
+%%% $LastChangedRevision: 2600 $
+%%% $LastChangedBy: lf1agure $
+%%% $Id: GReissigHyperref.sty 2600 2022-03-31 15:24:15Z lf1agure $
+%%%
+%%% Gunther Reissig, 2003-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Known Problems:
+% * package hyperref interferes with bibtex to the effect that
+%   commands like \bibitem[key]{label} do not properly format, in the
+%   case that a `draft' documentclass option is used
+% * problems in connection w/ beamer class
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% hyperref should be the last package loaded, followed only by doi and
+% url:
+\RequirePackage{ifpdf}
+\ifpdf\RequirePackage{hyperref}%
+\else%
+\RequirePackage[ps2pdf]{hyperref}%
+\fi
+\hypersetup{%
+%extension=unused,%
+%baseurl={http://www.reiszig.de/},%
+colorlinks=true,%
+%pdfborder={0 0 1},%
+breaklinks=true,%
+pdfdisplaydoctitle=true,%
+linkcolor={black},%
+anchorcolor={black},%
+citecolor={black},%
+%filecolor
+%menuecolor
+%pagecolor={blue},
+urlcolor={blue},%
+%citebordercolor={0 1 0},%
+%filebordercolor={0 .5 .5},%
+%linkbordercolor={1 0 0},%
+urlbordercolor={1 1 1},%
+pdfstartview={FitV}%
+}
+\hyperbaseurl{http://www.reiszig.de/gunther/}
+% in bibtex gebraucht!
+
+\ifx\mykeywords\undefined\def\mykeywords{}\fi
+\ifx\mytitle\undefined\def\mytitle{}\fi
+\ifx\myname\undefined\def\myname{}\fi
+\ifx\submissionNote\undefined\def\submissionNote{}\fi
+\hypersetup{
+%draft=true,% turns hyperref off
+pdftitle={\mytitle},
+pdfauthor={\myname},%
+pdfsubject={http://www.reiszig.de/gunther/, \submissionNote},
+pdfkeywords={\mykeywords}
+}
+
+%%% provide commands to suitably format DOIs and URLs: %%%%%%%%%%%%%%%
+\ifACMclass\else\RequirePackage{doi}\fi % not allowed by ACM
+\RequirePackage{url}
+
+
+

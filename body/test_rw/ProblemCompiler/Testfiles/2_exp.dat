@@ -1,0 +1,11 @@
+Real a = 1.5;
+f: x in Real to y
+{
+	y = exp(x*x/10);
+}
+Function: (t,x) in ([0,.001],[1,1.01]) to z
+{
+	initialvalue(z,x);
+	diff(z,t) = f(z);
+}
+

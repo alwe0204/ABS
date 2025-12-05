@@ -1,0 +1,60 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% $LastChangedDate: 2022-04-07 18:14:16 +0200 (Do, 07 Apr 2022) $ (local)
+%%% $LastChangedRevision: 2630 $
+%%% $LastChangedBy: lf1agure $
+%%% $Id: readonly_paths_file.tex 2630 2022-04-07 16:14:16Z lf1agure $
+%%%
+%%% created using admin/create_readonly_paths_file
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% macro providing information about read-only paths in repository
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\RequirePackage{GReissigGeneral}% loads package svn-multi
+\svnid{$Id: readonly_paths_file.tex 2630 2022-04-07 16:14:16Z lf1agure $}
+%%
+%% globally define the following macros:
+%% * \ReadOnlyPathsTableBody - body of table listing the read only
+%%   parts of the repository
+%%
+\gdef\ReadOnlyPathsTableBody{
+% References below refer to labels in programmermanual.tex
+%\\
+\nolinkurl{tags/} &&&
+See Sections
+\ref{s:organization:ProjectAndDevelopmentBranches} and
+\ref{s:CodingAndMaintenanceConventions:ResponsibilitiesOfProjectAdministrator:ReleasesAndVersionNaming}.
+\\
+\nolinkurl{trunk/admin/} &&&
+See Sections \ref{s:organization:Structure:TopLevelBuild} and
+\ref{s:CodingAndMaintenanceConventions:ResponsibilitiesOfProjectAdministrator:ReleasesAndVersionNaming}.
+\\
+\nolinkurl{trunk/bin/} &&&
+See Section \ref{s:organization:Structure:TopLevelBuild}.
+\\
+\nolinkurl{trunk/obj/} &&&
+See Section \ref{s:organization:Structure:TopLevelBuild}.
+\\
+\nolinkurl{trunk/body/readonly/} &&&
+See Section \ref{s:organization:Structure:TopLevelBuild}.
+\\
+\nolinkurl{trunk/body/hidden/} &&&
+See Section \ref{s:organization:Structure:TopLevelBuild}.
+\\
+\nolinkurl{trunk/body/test_ro/} &&&
+See Section \ref{s:organization:Structure:TopLevelBuild}.
+\\
+\nolinkurl{trunk/spec/readonly/} &&&
+See Section \ref{s:organization:Structure:TopLevelBuild}.
+\\
+\nolinkurl{trunk/spec/hidden/} &&&
+See Section \ref{s:organization:Structure:TopLevelBuild}.
+\\
+\nolinkurl{trunk/spec/test_ro/} &&&
+See Section \ref{s:organization:Structure:TopLevelBuild}.
+\\
+\nolinkurl{trunk/doc/Manuals/texfiles/admin/} &&&
+Project information, and the like.
+\\
+\nolinkurl{trunk/doc/Manuals/texfiles/TeX_links/} &&&
+\TeX{} ressources branched from subdirectories of the repository root,
+other than the project root.
+}

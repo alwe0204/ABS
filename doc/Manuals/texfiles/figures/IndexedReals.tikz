@@ -1,0 +1,29 @@
+﻿\begin{tikzpicture}[scale=1.]
+\draw  (-3.5,3.5) rectangle (8.5,-4.5);
+\coordinate (v1) at (-3.5,1.5) {};
+\coordinate (v2) at (8.5,1.5) {};
+\draw  (v1) -- (v2);
+\coordinate (v3) at (-0.5,3.5) {};
+\coordinate (v4) at (-0.5,-4.5) {};
+\draw  (v3) -- (v4);
+\coordinate (v5) at (2.5,3.5) {};
+\coordinate (v6) at (2.5,-4.5) {};
+\draw  (v5) -- (v6);
+\coordinate (v7) at (5.5,3.5) {};
+\coordinate (v8) at (5.5,-4.5) {};
+\draw  (v7) -- (v8);
+\coordinate (v9) at (-3.5,-0.5) {};
+\coordinate (v10) at (8.5,-0.5) {};
+\draw  (v9) -- (v10);
+\coordinate (v11) at (-3.5,-2.5) {};
+\coordinate (v12) at (8.5,-2.5) {};
+\draw  (v11) -- (v12);
+\foreach \x in {0,...,3}
+\foreach \y in {0,...,3}
+\draw[fill=black] (3*\x-2,2*\y-3.5) circle (2pt);
+\draw[fill=red,red] (-3.5,-4.5) circle (3pt);
+\draw[fill=green!60!black,green!60!black] (8.5,3.5) circle (3pt);
+\foreach \x in {0,...,7}
+\foreach \y in {0,...,7}
+\draw[fill=blue,blue] (1.5*\x-2.75,1*\y-4) circle (2pt);
+\end{tikzpicture}

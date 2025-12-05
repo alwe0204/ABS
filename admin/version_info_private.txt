@@ -1,0 +1,19 @@
+16
+%  1 % version_info_private.txt
+%  2 %
+%  3 % created by G Reissig, Apr 2017
+%  4 %
+%  5 % version information, see programmer's manual
+%  6 %
+%  7 % $Id: version_info_private.txt 2670 2022-04-19 17:19:46Z lf1agure $
+%  8 % ---------------------------------------------------------------
+%  9 % Structure of this file:
+% 10 % - line 1: NOC = number of comment lines
+% 11 % - the following NOC lines: comments
+% 12 % - line 1 following comments: regular expression (extended
+% 13 %   POSIX) which must be satisfied by version name
+% 14 % - line 2 following comments: version name
+% 15 %
+% 16 % ---------------------------------------------------------------
+^[0-9A-Za-z-]+\.[0-9A-Za-z-]+$
+2.0

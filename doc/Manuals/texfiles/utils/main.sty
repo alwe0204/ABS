@@ -1,0 +1,320 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% $LastChangedDate: 2022-04-19 17:05:04 +0200 (Di, 19 Apr 2022) $ (local)
+%%% $LastChangedRevision: 2658 $
+%%% $LastChangedBy: lf1agure $
+%%% $Id: main.sty 2658 2022-04-19 15:05:04Z lf1agure $
+%%%
+%%% created by G Reissig, Apr 2017
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% basic macros related to version information, repository
+% information, authors and contributors, etc, to be used in the
+% User's and the Programmer's manuals
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+\def\fileversion{1.0}
+\def\filedate{2017/04/13}
+
+\typeout{Package: `main' \fileversion\space <\filedate> (GR)}
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{utils/main}[\filedate\space\fileversion]
+
+\input{admin/project_info.tex}% general information about project
+\input{admin/credits.tex}% contributors, sponsors and the like
+\input{admin/readonly_paths_file.tex}% read-only paths in repository
+\input{utils/acknowledgment.tex}% acknowledgement text
+\input{utils/version_and_revision_table.tex}% version etc info table
+
+\begingroup % BEGIN: by default, definitions are local
+
+%%%%%%%%%%%%%%%%%%%%% auxiliary macros %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\input{utils/file_operations.tex}
+%%% END: auxiliary macros
+
+%%%%%%%%%%%%%%%%%%%%% repository and file system info %%%%%%%%%%%%%%%%
+% globally define the following macros:
+%
+% * \ifPublicRelease: conditional expression to distinguish between
+%    public and internal versions of manuals and other documentation;
+%    false iff the file \fullfilename defined below exists; used to
+%    generate tex code that compiles on arxiv without change
+%
+% * for internal versions, the following macros are additionally
+%   defined:
+% \RootAddressOfRepository
+% \RootAddressOfProjectInRepository
+% \RootAddressOfThisBranchOfProjectInRepository
+% \RootDirectoryOfWorkingCopyOfThisBranch
+% \DateAndTimeOfMostRecentChangeOfThisBranchInRepository
+% \RevisionNumberOfMostRecentChangeOfThisBranchInRepository
+%
+\begingroup
+% file from which information is to be read (format defined in the
+% comments at the beginning of the file):
+  \def\fullfilename{../../../admin/repository_and_file_system_info.txt}
+  \global\newif\ifPublicRelease
+  \newread\file
+  \IfFileExists{\fullfilename}{
+    \global\PublicReleasefalse % internal version
+    \openin\file=\fullfilename % open file
+    \SkipCommentLines % skip comment lines
+    \endlinechar=-1 % suppress end of line chars
+% actually read information from file:
+    \ReadSingleLine\RootAddressOfRepository
+    \ReadSingleLine\RootAddressOfProjectInRepository
+    \ReadSingleLine\RootAddressOfThisBranchOfProjectInRepository
+    \ReadSingleLine\RootDirectoryOfWorkingCopyOfThisBranch
+    \ReadSingleLine\DateAndTimeOfMostRecentChangeOfThisBranchInRepository
+    \ReadSingleLine\RevisionNumberOfMostRecentChangeOfThisBranchInRepository
+% close file:
+    \closein\file
+  }{
+    \global\PublicReleasetrue % public version
+    \typeout{File {\fullfilename} does not exist; this is a public release}
+  }
+\endgroup
+%%% END: repository and file system info
+
+%%%%%%%%%%%%%%%%%%%%% version related macros %%%%%%%%%%%%%%%%%%%%%%%%%
+% globally define the following macros:
+%
+% * \VersionMainName - part of version name preceding the '.'
+%
+% * for internal versions, the following macros are additionally
+%   defined:
+% \VersionName     - full name of version 
+% \VersionSubName  - part of version name following the '.'
+% \VersionNameRegularExpression - regular expression (extended POSIX)
+%      to be satisfied by \VersionName
+%
+% * for public releases, the following macros are additionally
+%   defined:
+% \DateAndTimeOfMostRecentChangeOfThisBranchInRepository
+%
+\begingroup
+% file from which information is to be read (format defined in the
+% comments at the beginning of the file):
+  \newread\file
+  \ifPublicRelease
+    \def\fullfilename{utils/version_info_public.txt}
+    \IfFileExists{\fullfilename}{
+      \openin\file=\fullfilename % open file
+      \SkipCommentLines % skip comment lines
+      \endlinechar=-1 % suppress end of line chars
+% actually read information from file:
+      \ReadSingleLine\VersionMainName
+      \ReadSingleLine\DateAndTimeOfMostRecentChangeOfThisBranchInRepository
+% close file:
+    \closein\file
+    }{
+    \errmessage{File {\fullfilename} does not exist}
+    }
+  \else % if internal version
+    \def\fullfilename{\RootDirectoryOfWorkingCopyOfThisBranch/admin/version_info_private_verified.txt}
+    \IfFileExists{\fullfilename}{
+      \openin\file=\fullfilename % open file
+      \SkipCommentLines % skip comment lines
+      \endlinechar=-1 % suppress end of line chars
+% actually read information from file:
+      \ReadSingleLine\VersionNameRegularExpression
+      \ReadSingleLine\VersionName
+% close file:
+      \closein\file
+% split \VersionName into \VersionMainName and \VersionSubName:
+      \def\split##1.##2\endsplit{%
+        \xdef\VersionMainName{##1}
+        \xdef\VersionSubName{##2}
+      }
+      \expandafter\split\VersionName\endsplit
+    }{
+    \errmessage{File {\fullfilename} does not exist}
+    }
+  \fi %END \ifPublicRelease
+\endgroup
+%%% END: version related macros
+
+% at this point, regardless of the value of \ifPublicRelease, at least
+% the following macros are globally defined:
+%
+% \ifPublicRelease
+% \VersionMainName
+% \DateAndTimeOfMostRecentChangeOfThisBranchInRepository
+% \ReadOnlyPathsTableBody
+
+%%%%%%%%%%%%%%%%%%%%% title page and page following title page %%%%%%%
+% globally define the following macros:
+% * \maketitle: sets title page and the page following the title page
+%
+% * define title, date
+\begingroup
+\gdef\maketitle{%
+%%% set title page: %%%%%%%%%%
+\begin{titlepage}
+\def\HRule{\noindent\rule{\linewidth}{3pt}}% hor rule, LaTeX Companion
+%\let\@makefnmark\relax% no footnote marks
+\let\footnoterule\relax% no footnote rule
+%\def\@makefntext##1{\noindent##1}% no indentation
+\def\thefootnote{\fnsymbol{footnote}}% symbol rather than number
+\let\footnote\thanks
+%
+%\vspace*{30pt}
+\HRule
+\begin{flushleft}
+\fontsize{15pt}{10pt}\usefont{OT1}{ptmr}{m}{n}
+\@author\\[60pt]
+\fontsize{40pt}{45pt}\usefont{OT1}{phv}{b}{n}
+\@title\\[60pt]
+\fontsize{20pt}{30pt}\usefont{OT1}{ptmr}{m}{n}
+\DocumentationType\\[10pt]
+\fontsize{15pt}{10pt}\usefont{OT1}{ptmr}{m}{n}
+Version \VersionMainName\hspace*{\fill}\@date\\
+\HRule
+\end{flushleft}
+%
+\@thanks
+\end{titlepage}
+%%% undefine some macros: %%%%%%%%%%
+\setcounter{footnote}{0}%
+\global\let\thanks\relax
+\global\let\maketitle\relax
+\global\let\@thanks\@empty
+\global\let\@author\@empty
+\global\let\@date\@empty
+\global\let\@title\@empty
+\global\let\title\relax
+\global\let\author\relax
+\global\let\date\relax
+\global\let\and\relax
+%
+%%% set page following title page: %%%%%%%%%%
+\begin{titlepage}
+\refstepcounter{page}
+%
+\begin{abstract}
+\AbstractText
+\end{abstract}
+
+\vfill
+
+\def\abstractname{Acknowledgment}
+\begin{abstract}
+\AcknowledgmentText
+\end{abstract}
+
+\vfill
+
+\ifPublicRelease\else
+\def\abstractname{Version and Revision Information}
+\begin{abstract}
+{\scriptsize\noindent\VersionAndRevisionTable}
+\end{abstract}
+\fi
+\end{titlepage}
+%%% undefine some macros: %%%%%%%%%%
+\global\let\AbstractText\@undefined
+\global\let\AcknowledgmentText\@undefined
+\global\let\VersionAndRevisionTable\@undefined
+}
+% END: \def\maketitle
+%
+% define title (the ' ' after '\\' is needed):
+\title{\ProjectAcronym\\ \ProjectPreName{} \ProjectName}
+% set date:
+% BEGIN: old code with original xml format date:
+% \RequirePackage{xstring}
+% % GR: had to use this package as I was unable to split the string
+% % stored in \DateAndTimeOfMostRecentChangeOfThisBranchInRepository at
+% % the position of the 'T' in the same way as with \VersionName
+% % above - splitting at other positions works fine. Do not know why.
+% \StrSplit{\DateAndTimeOfMostRecentChangeOfThisBranchInRepository}{4}{\tmpyear}{\tmprest}
+% \StrSplit{\tmprest}{1}{\tmpmonth}{\tmprest}
+% \StrSplit{\tmprest}{2}{\tmpmonth}{\tmprest}
+% \StrSplit{\tmprest}{1}{\tmpday}{\tmprest}
+% \StrSplit{\tmprest}{2}{\tmpday}{\tmprest}
+% END: old code with original xml format date:
+%
+% split \DateAndTimeOfMostRecentChangeOfThisBranchInRepository:
+\def\split#1-#2-#3/#4\endsplit{%
+\def\tmpyear{#1}\def\tmpmonth{#2}\def\tmpday{#3}%
+}
+\expandafter\split\DateAndTimeOfMostRecentChangeOfThisBranchInRepository\endsplit
+% actually set date (help from reports.cls):
+\xdef\@date{\ifcase\tmpmonth\or
+January\or February\or March\or April\or May\or June\or
+July\or August\or September\or October\or November\or December\fi
+\space\tmpday, \tmpyear}
+\endgroup
+%%% END: title page
+\endgroup % END: by default, definitions are local
+
+%%%%%%%%%%%%%%%%%%%%% setup needed for both manuals %%%%%%%%%%%%%%%%%%
+
+%%% Bibliography:
+%
+% Define \bstctlcite, and use IEEEtran.bst with
+% \bstctlcite{IEEEtranBSTCTL_AuthorNoDash} without using
+% IEEEtran.cls. Expect strange behavior of
+% \bstctlcite{IEEEtranBSTCTL_AuthorNoDash} in combination with other
+% bibtex styles.
+\ifx\bstctlcite\undefined
+ \def\bstctlcite{\@ifnextchar[{\@bstctlcite}{\@bstctlcite[@auxout]}}
+ \def\@bstctlcite[#1]#2{\@bsphack
+  \@for\@citeb:=#2\do{%
+    \edef\@citeb{\expandafter\@firstofone\@citeb}%
+    \if@filesw\immediate\write\csname #1\endcsname{\string\citation{\@citeb}}\fi}%
+  \@esphack}
+\fi
+% \AtBeginDocument{\bstctlcite{IEEEtranBSTCTL_AuthorNoDash}} is
+% performed in gunther2e since \bstctlcite is now defined.
+\AtEndDocument{%
+\newpage\footnotesize
+\bibliographystyle{GReissigIEEEtran}
+%
+%\renewcommand\bibname{\Large References}
+\addcontentsline{toc}{section}{References}
+\bibliography{GReissigBSTCTL,GReissigPreambles,mrabbrev,GReissigStrings,GReissigFremde,GReissigFremdeTMP,GReissigCONF,GReissigJOURNALS,GReissigREPORTS,referencesstudents}
+}
+% not needed so far: GReissigPATENT,GReissigTALKS,GReissigTHESES
+
+%%% END: Bibliography
+\RequirePackage{GReissigPrepare}
+\RequirePackage{GReissigFontsAndEncoding}
+\RequirePackage{GReissigMathOperators}
+\RequirePackage{GReissigTextOperators}
+\RequirePackage{GReissigRefstepcounter}
+\RequirePackage{GReissigLanguage}\selectlanguage{american}
+\RequirePackage{GReissigListEnvironments}
+\RequirePackage{GReissigTheorems}
+\RequirePackage{GReissigBibtex}
+\RequirePackage{GReissigHyperref}
+\RequirePackage{GReissigGeneral}\svnid{$Id: main.sty 2658 2022-04-19 15:05:04Z lf1agure $}
+
+\RequirePackage{psfrag}
+\RequirePackage{graphicx}
+\RequirePackage{tabularx}
+\RequirePackage{geometry}
+\geometry{right=1.5cm,left=2cm,top=3.cm,bottom=2cm}
+\renewcommand{\thesection}{\arabic{section}}
+
+%%% Language:
+\AtBeginDocument{\selectlanguage{american}}
+%%% END: Language
+
+%%% hyperref setup
+\hypersetup{
+pdftitle={\@title},
+pdfauthor={\@author},%
+pdfsubject={\DocumentationType, Version \VersionMainName},
+pdfkeywords={\ProjectAdministratorsAffiliation, \ProjectAdministratorsWWW}
+}
+%%% END: hyperref setup
+
+\newenvironment{Note}   [1]{\par\vspace{\topsep}\noindent\textbf{Note: }{#1}}{\\}
+\newenvironment{Important}   [1]{\par\vspace{\topsep}\noindent\textbf{Important: }{#1}}{\\}
+\newenvironment{Example}[1]{\par\vspace{\topsep}\noindent\textbf{Example: }{#1}}{\\}
+
+\newcommand{\nonterminal}[1]{\mbox{\textit{#1}}}
+\newcommand{\terminal}[1]{\mbox{\texttt{#1}}}
+\newcommand{\terminalkeyword}[1]{\mbox{\textsf{#1}}}
+\newcommand{\BNFsep}{::=}
+
+%%% END: setup needed for every documentation

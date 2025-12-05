@@ -1,0 +1,67 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% $LastChangedDate: 2022-03-31 17:24:15 +0200 (Do, 31 Mär 2022) $ (local)
+%%% $LastChangedRevision: 2600 $
+%%% $LastChangedBy: lf1agure $
+%%% $Id: GReissigLanguage.sty 2600 2022-03-31 15:24:15Z lf1agure $
+%%%
+%%% Gunther Reissig, 2003-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage{GReissigPrepare}
+
+% Language: Two versions:
+% a) load babel if not yet loaded:
+%  - default
+%  - redefines \iflanguage
+%  - defines \selectlanguage
+%  - select languages german and american; if other languages needed,
+%    then babel must be loaded befor the present file
+% b) do not load babel:
+%  - use for ACM document classes
+%  (alternatively, redefine \iflanguage and define
+%    \selectlanguage just to make sure using these commands does not
+%    result in an error - enable if needed)
+
+\ifACMclass
+% % a) if class name different from `acmart':
+% \def\selectlanguage#1{}%
+% \def\select@language#1{}%
+% % some code from babel's switch.def:
+% \def\@nolanerr#1{%
+%   \bbl@error
+%     {You haven't defined the language #1\space yet}%
+%     {Your command will be ignored, type <return> to proceed}}
+% \def\bbl@error#1#2{%
+%   \begingroup
+%     \newlinechar=`\^^J
+%     \def\\{^^J(babel) }%
+%     \errhelp{#2}\errmessage{\\#1}%
+%   \endgroup}
+% \def\bbl@iflanguage#1{%
+%   \@ifundefined{l@#1}{\@nolanerr{#1}\@gobble}\@firstofone}
+% \def\iflanguage#1{%
+%   \bbl@iflanguage{#1}{%
+%     \ifnum\csname l@#1\endcsname=\language
+%       \expandafter\@firstoftwo
+%     \else
+%       \expandafter\@secondoftwo
+%     \fi}}
+\else
+% otherwise b):
+\ifx\bbl@main@language\@undefined%
+\RequirePackage[german,american]{babel}[2001/03/01]%
+\selectlanguage{american}
+\fi
+\fi
+
+% Hyphenation:
+\ifACMclass\else\selectlanguage{german}\fi
+\hyphenation{Dum-mers-torf}
+\hyphenation{nicht-ska-lar nicht-ska-la-ren nicht-ska-la-res
+  nicht-ska-la-rer nicht-ska-la-rem}
+\hyphenation{Stre-cke}
+
+\ifACMclass\else\selectlanguage{american}\fi
+\hyphenation{Dum-mers-torf}
+\hyphenation{through-out Through-out}
+\hyphenation{con-trol-la-bil-i-ty Con-trol-la-bil-i-ty}

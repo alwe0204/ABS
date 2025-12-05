@@ -1,0 +1,9 @@
+f: x in Real to y
+{
+	y = exp(x);
+}
+Function: (t,x) in ([0,.1],[0,1]) to a
+{
+	initialvalue(a,x);
+	diff(a,t) = f(a);
+}

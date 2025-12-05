@@ -1,0 +1,151 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% $LastChangedDate: 2022-03-31 17:24:15 +0200 (Do, 31 Mär 2022) $ (local)
+%%% $LastChangedRevision: 2600 $
+%%% $LastChangedBy: lf1agure $
+%%% $Id: GReissigMathOperators.sty 2600 2022-03-31 15:24:15Z lf1agure $
+%%%
+%%% Gunther Reissig, 2003-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage{GReissigPrepare}
+\RequirePackage{GReissigAMS}% \DeclareMathOperator
+\RequirePackage{stmaryrd}%    \llbracket, ...
+
+% yet to be differentiated wrt languages
+% Math Operators:
+% some use \ensuremath so that they can be used outside math
+% environments as well (e.g. \segcc)
+\def\card{\mathop{\rm card}\nolimits}     % cardinality
+\def\PowerSet{\mathalpha{\mathcal{P}}}
+\def\prod{\mathop{\Pi}}
+\DeclareMathOperator{\id}{id}             % identity map
+\def\im{\mathop{\rm im}\nolimits}         % range/image
+\DeclareMathOperator{\dom}{dom}           % (effective) domain
+\def\codim{\mathop{\rm codim}\nolimits}
+%\def\det{\mathop{\rm det}\nolimits}
+\def\per{\mathop{\rm per}\nolimits}
+\def\edeg{\mathop{\rm edeg}\nolimits}
+\def\FILL{\mathop{\rm fill}\nolimits}
+\def\ind{\mathop{\rm ind}\nolimits}
+\def\interior{\mathop{\rm int}\nolimits}
+\DeclareMathOperator{\relInterior}{rint}  % relative interior
+\def\closure{\mathop{\rm cl}\nolimits}
+\DeclareMathOperator{\diam}{diam}         % diameter
+%\def\diam{\mathop{\rm diam}\nolimits}
+\DeclareMathOperator{\rad}{rad}           % radius
+\def\boundary{\partial}% w/ \mathop the character is placed too low
+\def\adj{\mathop{\rm adj}\nolimits}       % tranpose of matrix of cofactors
+\def\Pre{\mathop{\rm Pre}\nolimits}
+\def\Post{\mathop{\rm Post}\nolimits}
+%\def\max{\mathop{\rm max}}
+%\def\min{\mathop{\rm min}}
+\def\argmax{\mathop{\rm argmax}}
+\def\argmin{\mathop{\rm argmin}}
+\def\rank{\mathop{\rm rank}\nolimits}     % rank
+\def\cond{\mathop{\rm cond}\nolimits}     % condition number
+\def\termrank{\mathop{\rm rank_t}\nolimits} % term-rank
+\def\diag{\mathop{\rm diag}\nolimits}
+\def\sign{\mathop{\rm sign}\nolimits}     % sign function
+\def\linHull{\mathop{\rm span}\nolimits}  % linear hull
+\def\affHull{\mathop{\rm aff}\nolimits}   % affine hull
+\def\recCone{\mathop{\rm rcone}\nolimits} % recession cone
+\def\horCone{\mathop{\rm hcone}\nolimits} % horizon cone
+\def\linealitySpace{\mathop{\rm lin}\nolimits} % lineality space
+\def\extLinealitySpace{\mathop{\rm xlin}\nolimits} % extended lineality space
+\def\supp{\mathop{\rm supp}\nolimits}     % support
+\def\row{\mathop{\rm Row}\nolimits}       % as TeX, p. 288: Sin(.)
+\def\col{\mathop{\rm Col}\nolimits}       % as TeX, p. 288: Sin(.)
+\def\spur{\mathop{\rm spur}\nolimits}     % trace
+\def\Re{\mathop{\rm Re}\nolimits}         % real part
+\def\Im{\mathop{\rm Im}\nolimits}         % imaginary part
+\def\conv{\mathop{\rm conv}\nolimits}     % convex hull
+\def\sym{\mathop{\rm sym}\nolimits}       % symmetric hull
+\def\epi{\mathop{\rm epi}\nolimits}       % epigraph
+\def\hypo{\mathop{\rm hypo}\nolimits}     % hypograph
+\def\graph{\mathop{\rm graph}\nolimits}   % graph
+%\def\defby{\relax\ifmmode\mathrel{:\negthinspace\Longleftrightarrow}\else$\defby$ \fi}
+\def\defby{\relax\ifmmode\mathrel{:\negthinspace\Leftrightarrow}\else$\defby$ \fi}
+\def\defas{\relax\ifmmode\mathrel{:=}\else$\defas$ \fi}
+\def\defin{\relax\ifmmode\mathrel{:\in}\else$\defin$ \fi}
+%\def\gdw{\relax\ifmmode\mathrel{\Longleftrightarrow}\else$\gdw$ \fi}
+\def\gdw{\relax\ifmmode\mathrel{\Leftrightarrow}\else$\gdw$ \fi} % logical equivalence, obsolete
+\def\shortiff{\relax\ifmmode\mathrel{\Leftrightarrow}\else$\shortiff$ \fi} % smaller variant of \iff
+%\def\implies{\relax\ifmmode\mathrel{\Longrightarrow}\else$\implies$ \fi}
+\def\implies{\relax\ifmmode\mathrel{\Rightarrow}\else$\implies$\fi}
+\def\implied{\relax\ifmmode\mathrel{\Leftarrow}\else$\implied$\fi}
+%\def\defby{\relax\ensuremath{\mathrel{:\negthinspace\Longleftrightarrow}}}
+%\def\defas{\relax\ensuremath{\mathrel{:=}}}
+%\def\gdw{\relax\ensuremath{\mathrel{\Longleftrightarrow}}}
+\def\e{\mathrm{e}} % Eulerian number
+%
+\def\graphliminf{\operatornamewithlimits{g-liminf}}
+\def\graphlimsup{\operatornamewithlimits{g-limsup}}
+\def\graphlim{\operatornamewithlimits{g-lim}}
+% \def\epiliminf{\operatornamewithlimits{e-liminf}}
+% \def\epilimsup{\operatornamewithlimits{e-limsup}}
+\def\epilim{\operatornamewithlimits{e-lim}}
+% \def\hypoliminf{\operatornamewithlimits{h-liminf}}
+% \def\hypolimsup{\operatornamewithlimits{h-limsup}}
+\def\hypolim{\operatornamewithlimits{h-lim}}
+%
+% \def\pointliminf{\operatornamewithlimits{p-liminf}}
+% \def\pointlimsup{\operatornamewithlimits{p-limsup}}
+\def\pointlim{\operatornamewithlimits{p-lim}}
+%
+% Brackets etc:
+\DeclareMathDelimiter{\orbrack}{\mathopen}{operators}{"5D}{largesymbols}{"03}
+\DeclareMathDelimiter{\clbrack}{\mathclose}{operators}{"5B}{largesymbols}{"02}
+% Floor, Ceil:
+\def\floor#1{\ensuremath{\left\lfloor#1\right\rfloor}}
+\def\ceil#1{\ensuremath{\left\lceil#1\right\rceil}}
+% Intervals:
+% see [HewittStromberg75]
+\def\intcc#1{\ensuremath{\left[#1\right]}}% not needed
+%\def\intoo#1{\ensuremath{\mathopen]#1\mathclose[}}
+%\def\intoc#1{\ensuremath{\mathopen]#1]}}
+%\def\intco#1{\ensuremath{[#1\mathclose[}}
+\def\intoo#1{\ensuremath{\left\orbrack#1\right\clbrack}}
+\def\intoc#1{\ensuremath{\left\orbrack#1\right]}}
+\def\intco#1{\ensuremath{\left[#1\right\clbrack}}
+% Discrete intervals:
+% as before, but w/ semi-colon in place of a comma [Reissig11a]
+%
+% Strecken (segmente): wie hier auch left-right anstaendig?
+\def\segcc#1{\ensuremath{\left\llbracket#1\right\rrbracket}}
+\def\segoo#1{\ensuremath{\left\rrbracket#1\right\llbracket}}
+\def\segoc#1{\ensuremath{\left\rrbracket#1\right\rrbracket}}
+\def\segco#1{\ensuremath{\left\llbracket#1\right\llbracket}}
+%
+% Sets:
+\def\Set#1#2{\ensuremath{%
+\left\{#1\,\middle|\,#2\right\}%
+}}
+\let\Menge=\Set
+
+% inner product:
+\def\innerProd#1#2{\ensuremath{%
+\left\langle#1\middle|#2\right\rangle%
+}}
+\def\innerProdEuclid#1#2{\ensuremath{%
+\left(#1\middle|#2\right)%
+}}
+% Ball:
+\def\oBall{\mathalpha{B}}
+\def\cBall{\mathalpha{\Bar{B}}}
+% rectangle etc:
+\def\oRect{\mathalpha{R}}
+\def\cRect{\mathalpha{\Bar{R}}}
+% zonotope and zonotope enclosure:
+\def\cZonotope{\mathalpha{\Bar{Z}}}
+\def\Enclosure{\mathop{\rm Enc}\nolimits}
+% folgendes funktioniert leider nicht:
+%\DeclareMathVersion{semibold}
+%\SetSymbolFont{operators}{semibold}{OT1}{cmr}{sbx}{n}
+%\SetSymbolFont{letters}{semibold}{OML}{cmm}{sb}{it}
+%\SetSymbolFont{symbols}{semibold}{OMS}{cmsy}{sb}{n}
+
+\ifACMclass\else% not allowed by ACM
+\RequirePackage{dsfont} % used only for \one, should be used sparingly
+\def\one{\mathalpha{\ensuremath{\mathds{1}}}}
+\fi
+%

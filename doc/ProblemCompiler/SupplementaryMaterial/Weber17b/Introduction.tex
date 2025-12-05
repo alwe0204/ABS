@@ -1,0 +1,672 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% $Id: Introduction.tex 2071 2020-06-11 11:32:06Z lf1agure $
+%%% Alexander Weber, 2017
+%%%
+%%% Part of Alexander Weber's language definition [Weber17b]
+%%%
+%%% BibTeX keys coincide with Gunther Reissig's BibTeX database, but
+%%% list of references is currently hard coded in the file
+%%% Weber17b.bbl
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[11pt]{article}
+\usepackage[pdftex,
+            pdfauthor={Alexander Weber},
+            pdftitle={Language definition},]{hyperref}
+\usepackage{gunther2e}
+\usepackage{amssymb}
+\usepackage{geometry}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usetikzlibrary{calc,shapes,arrows,automata}
+\geometry{right=3.cm,left=3.cm,top=2.0cm,bottom=2.0cm}
+\usepackage{etoolbox}
+\usepackage{xcolor}
+\usepackage{mdframed}
+\usepackage{alltt}
+\usepackage{tocloft}
+% \usepackage{draftwatermark}
+% \SetWatermarkText{DRAFT}
+% \SetWatermarkScale{5}
+\makeatletter
+\preto{\@verbatim}{\topsep=5pt }
+\makeatother
+\newenvironment{semantics}{\noindent\textit{Denotational semantics:} \newline}{}
+\newenvironment{aux}{\noindent\textit{Auxiliary functions:} \newline}{~\newline}
+\newenvironment{remarks}{\noindent\textit{Remark:}}{}
+\newenvironment{production}{\begin{mdframed}[backgroundcolor=gray!10]}{\end{mdframed}}
+\begin{document}\selectlanguage{american}
+\bibliographystyle{IEEEtrans}
+\title{Language definition}
+\author{Alexander Weber}
+\date{February 3, 2017}
+\maketitle
+\tableofcontents
+\section{Introduction}
+\label{s:Introduction}
+In this work, a programming language is defined whose main purpose
+is to represent solutions to ordinary differential equations. 
+%
+The process of rigorously defining a programming language 
+requires the use of various concepts. 
+%
+Therefore, before defining the actual programming language,
+we will illustrate in Section \ref{s:Introduction} 
+on an example of a simple programming language
+all concepts that are needed to define
+the actual programming language.
+
+These concepts include
+context-free grammars, 
+interpretation functions, 
+variables and 
+keywords. 
+%
+The overall scheme for defining
+a programming language consists of three steps 
+as outlined below.
+
+In general terms, the purpose of a programming language is
+to represent certain objects using some predefined set of 
+graphical characters. So the first step is to define an
+appropriate set of graphical characters. 
+For instance, in most existing programming languages 
+the letters of the Latin alphabet are valid graphical characters, 
+where here and subsequently we mean
+by a valid graphical
+character an element of the previously defined set.
+%
+The set of ``valid'' programs of a programming language
+is then a subset of the set of
+finite sequences of valid graphical characters,
+and this subset is fully specified by the next steps.
+%
+
+In the second step, a so-called syntax is defined, which,
+loosely speaking, defines a structure which 
+all programs must have. 
+The third step is to define denotational
+semantics \cite{ScottStrachey71,Tennent76,Allison86}, 
+which means giving a meaning to the syntactic constructs
+defined through the syntax.
+
+A finite sequence of 
+valid graphical characters that obeys the syntax rules 
+and additionally
+possesses a meaning in sense of
+the third step is called \begriff{program}.
+%
+Below, we discuss in detail all the three steps 
+on the example of a
+simple programming language and provide precise definitions
+for the concepts of syntax and denotational semantics.
+
+We want to consider as an example programming languages whose purpose is to represent 
+any function in the set of functions 
+\begin{equation}
+\label{e:example}
+F \defas \{ f\colon \mathbb{R} \to \mathbb{R}, x \mapsto m^{-1} x^n \mid m \in \mathbb{N}, n \in \mathbb{Z}_+\}.
+\end{equation}
+Obviously, a function in \ref{e:example} is specified 
+by a pair of integers, where the first integer is
+positive and the second one non-negative. 
+
+We will define three different programming languages,
+each of which being %a generalization of the previous and 
+defined so as 
+to illustrate the concepts 
+mentioned in the beginning of this section.
+We first use the simplest of the three variants to demonstrate the previously outlined 
+scheme for defining programming languages.  
+
+As the set of valid graphical characters 
+we define for the first version of our example programming language 
+the digits and the whitespace character, i.e., we use the set 
+\begin{equation}
+\label{e:validgraphicalcharacters}
+\{\verb|0|,\verb|1|,\verb|2|,\verb|3|,\verb|4|,\verb|5|,\verb|6|,\verb|7|,\verb|8|,\verb|9|,\verb*| |\}.
+\end{equation}
+The syntax of a programming language is defined by means of 
+so-called context-free grammars \cite{Ginsburg66}. (We define these concepts precisely later.) 
+We will specify context-free grammars using a notational technique 
+called Backus-Naur form \cite{Backus59}. The three
+Backus-Naur forms below are used for the first example programming language:
+\begin{verbatim}
+PROGRAM
+	: NNINTEGER ' ' NNINTEGER
+	;
+\end{verbatim}
+and 
+\begin{verbatim}
+NNINTEGER
+	: DIGIT
+	| NNINTEGER DIGIT
+	;
+\end{verbatim}
+and
+\begin{verbatim}
+DIGIT
+	: '0' | '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' 
+	;
+\end{verbatim}
+Loosely speaking, these forms reflect the facts that, firstly,
+a program should specify two non-negative integers, 
+and secondly, that a non-negative integer is a 
+sequence of digits. The fact that one of the integers has to be positive 
+is ignored in this step. We will be concerned with the latter constraint 
+when defining denotational semantics in the third step. 
+
+We define context-free grammars after having introduced
+some notation and terminology.
+%
+% Here, we emphasize that 
+%the fact that one of the integers has to be positive 
+%is ignored in this step. 
+%We will be concerned with the latter constraint 
+%when defining denotational semantics in the third step. 
+
+%As we want to rigorously define 
+%a programming language,
+%we have to formalize the concept of
+%context-free grammars. Then, we will be also in a position to give 
+%all details to the previous forms. 
+
+
+
+\begin{definition}
+\label{d:word}
+An \begriff{alphabet} is a finite nonempty set. 
+For $k \in \mathbb{Z}_+$ a finite sequence $x \colon \intcc{1;k} \to A$
+is called \begriff{word (of length $k$ over $A$)} and is written as $(x_1,\ldots,x_k)$ if $k\geq 1$.
+The word of length zero is called the \begriff{empty} word and is written as $()$.
+If $x$ and $y$ are words of length $k$ and $l$ over $A$ and $B$, respectively,
+then $xy$ stands for the word $z$ of length $k+l$ over $A \cup B$ defined by 
+$z_i = x_i$ for all $i \in \intcc{1;k}$ and $z_{k+i} = y_i$ for all $i \in \intcc{1;l}$.
+For an alphabet $A$ the set of all words (including the empty word) over $A$ is denoted by $A^\ast$.
+\end{definition}
+According to Definition \ref{d:word}, the sequence $(\verb|1|,\verb|2|,\verb|3|,\verb*| |,\verb|4|,\verb|5|,\verb|6|)$ 
+is a word of length $7$ over the set in \ref{e:validgraphicalcharacters}, and setting
+$a=(\verb|1|,\verb|2|,\verb|3|)$, $b=(\verb*| |)$, $c=(\verb|4|,\verb|5|,\verb|6|)$
+then $abc = (\verb|1|,\verb|2|,\verb|3|,\verb*| |,\verb|4|,\verb|5|,\verb|6|) $.
+%Next, we introduce the concept of
+%context-free grammars \cite{Ginsburg66}.
+\begin{definition}
+\label{d:grammar}
+A \begriff{context-free grammar} is a $4$-tuple
+\begin{equation*}
+\label{e:grammar}
+G=(N,T,R,s),
+\end{equation*}
+where 
+$N$, $T$ are alphabets, $N \cap T = \emptyset$, $R \subseteq N \times (N \cup T)^\ast$ finite, and $s \in N$. 
+Elements of $N$, $T$ and $R$ are called \begriff{nonterminal}, \begriff{terminal} and \begriff{production},
+respectively. $s$ is called \begriff{start symbol}.\\ 
+\end{definition}
+Before establishing the relation between Definition \ref{d:grammar} and 
+the syntax of a programming language, 
+we consider again Backus-Naur forms. 
+Backus-Naur forms specify the terminals, nonterminals and productions of a context-free grammar. 
+(The start symbol has to be
+specified separately.) 
+
+For the first example programming language 
+the context-free grammar $G=(N,T,R,s)$ is defined 
+by the three Backus-Naur forms as follows. 
+The set $T$ consists of the elements written within quotes\footnote{In Backus Naur forms, the whitespace character '$\texttt{\char32}$' is denoted as '$\texttt{ }$'.}, which here means
+that $T$ equals the set of valid graphical characters. 
+(This coincidence is not a rule. In the third programming language, where we will introduce
+keywords, the set of valid graphical characters will be a proper subset of the set of terminals.)
+The elements written before the colons define the set $N$, i.e.,
+$N = \{\verb|PROGRAM|,\verb|NNINTEGER|,\verb|DIGIT|\}$. Moreover, the forms define
+\begin{align*}
+\label{e:R}
+R = \big \{ &(\texttt{PROGRAM},(\texttt{NNINTEGER},\texttt{\char32},\texttt{NNINTEGER}) ), \nonumber \\
+&(\texttt{NNINTEGER},(\texttt{DIGIT})),(\texttt{NNINTEGER},(\texttt{NNINTEGER},\texttt{DIGIT})), \\
+&(\texttt{DIGIT},(\texttt{0})),(\texttt{DIGIT},(\texttt{1})),\ldots,(\texttt{DIGIT},(\texttt{9})) \big \}. \nonumber
+\end{align*}
+Finally, setting $s = \verb|PROGRAM|$ the context-free grammar $G$ has been specified. 
+The choice of $s$ will be obvious 
+after formally defining the syntax of a 
+programming language by means of context-free grammars.
+\begin{definition}
+Let $G=(N,T,R,s)$ be a context-free grammar. 
+For $x,y \in (N \cup T)^\ast$ we write $x \underset{G}{\overset{\ast}{\implies}} y$ and say 
+\begriff{$y$ is produced from $x$} if there exist 
+$w_0,\ldots,w_k \in (N \cup T)^\ast$
+such that $x = w_0$, $y= w_k$ and for all $i \in \intco{0;k}$ there exist $u \in N$,
+$v,z_1,z_2 \in (N \cup T)^\ast$ such that 
+\begin{equation}
+\label{e:production}
+w_i = z_1(u)z_2, \ w_{i+1} = z_1 v z_2, \ \text{and} \ (u,v) \in R.
+\end{equation}
+For $p \in N$ we write $[p]$ for the set 
+$
+\{ P \in T^\ast \mid (p) \underset{G}{\overset{\ast}{\implies}} P \}.
+$
+The set $[s]$ is called \begriff{language generated by the context-free grammar $G$}.
+%\begin{equation}
+%\label{e:L}
+%\{ P \in T^\ast \mid s \underset{G}{\overset{\ast}{\implies}} P \}
+%\end{equation}
+%is called \begriff{language generated by the context-free grammar $G$}.
+%In \ref{e:L}, we use the following notation: 
+\end{definition}
+The syntax of a programming language is defined as 
+the language generated by a context-free grammar. 
+
+For the first example programming language, we observe, e.g.,
+that %the last Backus-Naur form implies  
+\begin{equation}
+\label{e:digit}
+[\verb|DIGIT|]=\{(\verb|0|),(\verb|1|),(\verb|2|),(\verb|3|),(\verb|4|),(\verb|5|),
+(\verb|6|),(\verb|7|),(\verb|8|),(\verb|9|)\}.
+\end{equation}
+Indeed, let $y$ be an element of the right hand side of \ref{e:digit} and 
+use \ref{e:production}
+with $i=0$, $(u,v) = (\verb|DIGIT|,y)$, $z_1=z_2=()$ to see $y \in [\verb|DIGIT|]$. 
+The remaining inclusion to obtain \ref{e:digit} is clear from the definition of $T$ and $R$.
+
+We may also show that for all words $p,q \in D^\ast \setminus \{()\}$, where $D =\{\verb|0|,\verb|1|,\verb|2|,\verb|3|,\verb|4|,\verb|5|,
+\verb|6|,\verb|7|,\verb|8|,\verb|9|\}$, the word $p(\verb*| |)q$
+ is an element of the syntax 
+of the first example programming language.  
+The proof is tedious but straightforward, so we only indicate the idea by
+proving that (\verb|1|,\verb|2|,\verb*| |,\verb|3|,\verb|4|) is in the syntax.
+\begin{table}
+\centering
+\begin{tabular}{l|l|l|l|l|l}
+$i$ & $w_i$ & $z_1$ & $u$ & $v$ & $z_2$ \\
+\hline 
+\hline
+9 &(\verb|1|,\verb|2|,\verb*| |,\verb|3|,\verb|4|)&(\verb|1|,\verb|2|,\verb*| |,\verb|3|)&\verb|D|&(\verb|4|)&() \\
+8 &(\verb|1|,\verb|2|,\verb*| |,\verb|3|,\verb|D|)& (\verb|1|,\verb|2|,\verb*| |)&\verb|D|&(\verb|3|) &(\verb|D|) \\
+7 &(\verb|1|,\verb|2|,\verb*| |,\verb|D|,\verb|D|)& (\verb|1|)&\verb|D|&(\verb|2|) & (\verb*| |,\verb|D|,\verb|D|) \\
+6 &(\verb|1|,\verb|D|,\verb*| |,\verb|D|,\verb|D|)&()&\verb|D|&(\verb|1|)&(\verb|D|,\verb*| |,\verb|D|,\verb|D|) \\
+5 &(\verb|D|,\verb|D|,\verb*| |,\verb|D|,\verb|D|) &()&\verb|N|&(\verb|D|)&(\verb|D|,\verb*| |,\verb|D|,\verb|D|) \\
+4 &(\verb|N|,\verb|D|,\verb*| |,\verb|D|,\verb|D|) &()&\verb|N|&(\verb|N|,\verb|D|)& (\verb*| |,\verb|D|,\verb|D|) \\
+3 &(\verb|N|,\verb*| |,\verb|D|,\verb|D|) &(\verb|N|,\verb*| |)&\verb|N|&(\verb|D|)&(\verb|D|)\\
+2 &(\verb|N|,\verb*| |,\verb|N|,\verb|D|) &(\verb|N|,\verb*| |)&\verb|N|&(\verb|N|,\verb|D|) &() \\
+1 &(\verb|N|,\verb*| |,\verb|N|) &()& \verb|PROGRAM|&(\verb|N|,\verb*| |,\verb|N|) & ()\\
+0 &(\verb|PROGRAM|) &&&&
+\end{tabular}
+\caption{Elements to be used in \ref{e:production} 
+for proving that $(\texttt{1},\texttt{2},\texttt{\char32},\texttt{3},\texttt{4})$ is produced from (\texttt{PROGRAM}). 
+\texttt{D} and \texttt{N} stand for \texttt{DIGIT} and \texttt{NNINTEGER}, respectively.\label{fig:1234}}
+\end{table}
+Indeed, \ref{fig:1234} defines the elements to be used in \ref{e:production} 
+to obtain $$(\verb|1|,\verb|2|,\verb*| |,\verb|3|,\verb|4|)\in [\verb|PROGRAM|].$$
+
+So far, we defined a syntax for the first example programming language. 
+Now, we rigorously relate elements of the syntax to elements of \ref{e:example}, 
+which is the third step in the scheme for defining programming languages.
+%Moreover, note that the sequence \verb|0 1| is in the syntax but 
+%does not correspond to an element of \ref{e:example} if the first and second integer  
+%is interpreted as the parameter $m$ and $n$ in \ref{e:example}, respectively.
+%Next, we will give a meaning (denotational semantics) to elements of the syntax,
+%which is the third step in the scheme for defining programming languages.
+To this end, we formalize the concepts of 
+programming language and program below.
+Intuitively speaking, the alphabet $C$ in the subsequent definition
+represents the set of valid graphical characters of the programming language to be defined
+and the map $\mathcal{T}$ formalizes the relation between valid graphical characters and terminals.
+Similarly, the set $O$
+contains the objects to be represented by the programming language, the map $\mathcal{I}$ gives 
+a meaning to elements of the syntax and $\zeta$ stands for an error symbol.
+\begin{definition}
+\label{d:programminglanguage}
+Let $O$, $G=(N,T,R,s)$ and $C$, respectively, be a set, a context-free grammar and an alphabet.
+Let $\mathcal{T} \colon C^\ast \to T^\ast$ and 
+$\mathcal{I} \colon [s] \to O \cup \{\zeta\}$, where $\zeta \notin O$.
+The $6$-tuple
+$(O,G,C,\mathcal{T},\mathcal{I},\zeta)$ is called \begriff{programming language}. 
+An element in the set 
+\begin{equation}
+\label{e:program}
+\{ P \in C^\ast \mid \mathcal{T}(P) \in [s] \text{ and } \mathcal{I}\circ \mathcal{T}(P) \neq \zeta \}
+\end{equation}
+is called \begriff{program}. The map $\mathcal{T}$ is called \begriff{tokenizer}, 
+and a map whose domain is the set $[p]$ for some $p \in N$
+is called \begriff{interpretation function (for $p$)}.
+\end{definition}
+
+Intuitively speaking, an interpretation function maps 
+words over terminals that are produced from 
+$(p)$ for a fixed nonterminal $p$
+to mathematical objects. 
+%In particular, $\mathcal{I}$ in Definition \ref{d:programminglanguage}
+%is an interpretation function for the start symbol of $G$.
+%
+Following the notational conventions in \cite{ScottStrachey71,Tennent76,Allison86},
+we subsequently enclose arguments of interpretation functions in brackets $\segcc{\cdot}$. 
+
+
+We return now to the first example programming language
+and shall define interpretation functions 
+\begin{align*}
+\mathcal{I} &\colon [\texttt{PROGRAM}] \to F \cup \{ \zeta \}, \\
+\mathcal{E} &\colon [\texttt{NNINTEGER}] \to \mathbb{Z}_+, \\
+\mathcal{D} &\colon [\texttt{DIGIT}] \to \intcc{0;9},
+\end{align*}
+respectively, 
+where $F$ is the set in \ref{e:example}, and $\zeta \notin F$. 
+$\mathcal{E}$ and $\mathcal{D}$
+will be used to define $\mathcal{I}$. 
+Then, the first example programming language is formally defined as 
+$(F,G,T,\operatorname{id},\mathcal{I},\zeta)$. Here, the tokenizer is the identity map
+as we have chosen the set of terminals to equal the set of valid graphical characters. 
+(A tokenizer different from the identity map will be required for the third example programming language.)
+The definitions of $\mathcal{I}$, $\mathcal{E}$, $\mathcal{D}$ are as follows. 
+
+We define $\mathcal{D}$ by $\mathcal{D}\llbracket (\verb|0|)\rrbracket = 0$, 
+$\mathcal{D}\llbracket (\verb|1|)\rrbracket = 1$ 
+and so on. %We emphasize
+%that the graphical characters \verb|0| and \verb|1| shall be distinguished from
+%the numbers $0$ and $1$, respectively. 
+Next, let $a \in [\verb|DIGIT|]$,
+$b \in [\verb|NNINTEGER|]$. Define 
+\begin{subequations}
+\label{e:E}
+\begin{align}
+&\mathcal{E}\segcc{a} = \mathcal{D}\segcc{a}, \label{e:E:1} \\
+&\mathcal{E}\segcc{ba} = 
+10 \cdot \mathcal{E}\segcc{b} + \mathcal{D}\segcc{a}. \label{e:E:2}
+\end{align}
+\end{subequations}
+See also \cite{ScottStrachey71,Allison86}.
+Note the correspondence between the two alternatives 
+for \verb|NNINTEGER| in the Backus-Naur form and \ref{e:E:1},\ref{e:E:2}. 
+Finally, let $p,q \in [\verb|NNINTEGER|]$ and define
+$
+\mathcal{I}
+$ by 
+\begin{equation}
+\label{e:language:1:1}
+\mathcal{I}\llbracket p(\texttt{\char32})q \rrbracket = \begin{cases} \zeta, & \text{if } \mathcal{E}\segcc{p} = 0 \\ x \mapsto \mathcal{E}\segcc{p}^{-1} x ^{\mathcal{E} \segcc{q}}, & \text{otherwise} \end{cases}.
+\end{equation}
+For example, $\mathcal{I}\llbracket (\texttt{1},\texttt{2},\texttt{\char32},\texttt{3},\texttt{4}) \rrbracket = x \mapsto
+\mathcal{E}\llbracket (\texttt{1},\texttt{2})\rrbracket^{-1} x^{\mathcal{E}\llbracket(\texttt{3},\texttt{4}) \rrbracket } =  x \mapsto x^{34}/12$, thus $(\texttt{1},\texttt{2},\texttt{\char32},\texttt{3},\texttt{4})$ is a program of the programming language. 
+In contrast, $(\verb|0|,\verb*| |,\verb|1|)$ is not a program as 
+$\mathcal{I}\llbracket (\verb|0|,\verb*| |,\verb|1|) \rrbracket = \zeta$.
+The definition of the first example programming language is completed.
+
+Before proceeding, we simplify notation as follows. 
+Whenever appropriate, a valid graphical character or a terminal $a$ is identified
+with the word $(a)$ over the corresponding alphabet, and
+whitespace characters are no more displayed explicitly. 
+%Of course, programs in 
+%any practical programming language are written in this way. 
+Moreover, a word $z$ of length $k$ 
+written using the previous convention 
+is assumed to satisfy 
+$z_1,z_k \notin \{ \texttt{\char32}\}$ and 
+$z_{i} \neq \texttt{\char32}$ whenever $z_{i-1} = \texttt{\char32}$, $i \in \intcc{2;k}$.
+E.g., \verb|12 34| now stands for
+$(\verb|1|)(\verb|2|)(\verb*| |)(\verb|3|)(\verb|4|)=(\verb|1|,\verb|2|,\verb*| |,\verb|3|,\verb|4|)$, 
+and $\mathcal{I}\llbracket p \ q\rrbracket$ 
+denotes the left hand side of \ref{e:language:1:1}.
+
+
+The next programming language %for representing elements of \ref{e:example} 
+will be such that, e.g., the word
+\begin{equation}
+\label{e:program:2}
+\texttt{m=123 n=456 m n}
+\end{equation}
+becomes a program with the same 
+meaning as the program \texttt{123 456} of the first programming language. 
+To this end, we have to enlarge the set 
+of valid graphical characters, to redefine the context-free grammar, but most importantly,
+we have to introduce the concept of storing and reading data assigned to variables. 
+In \ref{e:program:2}, \verb|m| and \verb|n| are variables holding the values
+$123$ and $456$, respectively. 
+
+The concept of variables can be formalized by means of the set of functions 
+\begin{equation}
+\label{e:states}
+S = \{ A \to B \},
+\end{equation}
+where $A$, $B$ are non-empty sets, and reading and writing instructions
+included in programs. We call elements of $S$, $A$ and $B$ 
+\begriff{state}, \begriff{variable} and \begriff{data}, respectively. 
+A program including $k \in \mathbb{Z}_+$ writing instructions 
+defines a sequence $\sigma \colon \intcc{1;k} \to S$
+as follows. 
+If the $i$th writing instruction 
+is to write data $b$ to variable $a$,
+then $\sigma_i$ is such that $\sigma_i(a) = b$ and 
+$\sigma_i(x) = \sigma_{i-1}(x)$ for all $x \neq a$. 
+Here, $\sigma_0 \in S$ is an initial state, 
+whose choice depends on $B$ (not on the program).
+A reading instruction on the variable $a$ that occurs after $i \in \intcc{0;k}$ 
+preceding writing instructions means to evaluate $\sigma_i(a)$.
+
+We now illustrate the concept of variables on our second 
+example programming language for representing elements of \ref{e:example}.
+Firstly, we define 
+the set of valid graphical characters as the digits, the lowercase Latin alphabet, 
+the equals sign and the whitespace character, i.e., as the set
+\begin{equation}
+\label{e:graphicalcharacters}
+\{\verb|0|,\verb|1|,\verb|2|,\verb|3|,\verb|4|,\verb|5|,
+\verb|6|,\verb|7|,\verb|8|,\verb|9|,\verb|a|,\verb|b|,\verb|c|,\ldots,\verb|x|,\verb|y|,\verb|z|,\verb|=|,\verb*| | \}.
+\end{equation}
+Secondly, we define the set of variables $A$ in \ref{e:states} 
+as $A = [ \verb|IDENTIFIER|]$, where $\verb|IDENTIFIER|$ is
+a nonterminal in the context-free grammar to be defined. In fact, $A$
+is specified by the following two Backus-Naur forms:
+\begin{verbatim}
+LETTER
+	: 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' | 'j' | 'k' | 'l' | 'm' 
+	| 'n' | 'o' | 'p' | 'q' | 'r' | 's' | 't' | 'u' | 'v' | 'w' | 'x' | 'y' | 'z' 
+	;   
+\end{verbatim}
+and 
+\begin{verbatim}
+IDENTIFIER
+	: LETTER
+	| IDENTIFIER LETTER
+	;
+\end{verbatim}
+Hence, a variable in
+the context of the second example programming language will be
+a word over the lowercase letters of the Latin alphabet.
+Thirdly, we define the set of data $B$ in \ref{e:states} as $B = \mathbb{Z}_+$. 
+Let us now review \ref{e:program:2}. 
+The word in \ref{e:program:2} defines $\sigma \colon \intcc{1;2} \to S$ as follows. 
+The word \texttt{m=123} specifies
+$\sigma_1$ by $\sigma_1(\texttt{m}) = 123$ and $\sigma_1(x) = \sigma_0(x)$
+for all $x \in A \setminus\{\texttt{m}\}$, 
+where we define the initial state $\sigma_0 \in S$ by
+$\sigma_0(x) = 0$ for all $x \in A$. 
+The word \verb|n=456| specifies $\sigma_2 \in S$ by $\sigma_2(\texttt{n}) = 456$, 
+$\sigma_2(\texttt{m}) = \sigma_1(\texttt{m}) = 123$ and $\sigma_2(x) = \sigma_0(x)$ 
+for all $x \in A \setminus \{ \texttt{m},\texttt{n}\}$.
+Finally, the function in \ref{e:example} to be represented by \ref{e:program:2} 
+can be chosen as
+\begin{equation}
+\label{e:language:2:0}
+x \mapsto \sigma_2(\texttt{m})^{-1} x^{\sigma_2(\texttt{n})}= x \mapsto x^{456}/123.
+\end{equation}
+Note the two reading instructions in \ref{e:language:2:0}. 
+
+Next, we complete
+the rigorous definition of the second example programming language 
+by specifying a context-free grammar $G=(N,T,R,s)$ and denotational semantics. 
+We keep the Backus-Naur forms related to \texttt{NNINTEGER} and  \texttt{DIGIT} 
+from the first 
+programming language, include the
+two Backus-Naur forms related to \verb|LETTER| and \verb|IDENTIFIER| above, and 
+introduce three new forms as below. This time, we 
+define the corresponding interpretation functions 
+below of each form
+as it is more easier to follow that way. Interpretation functions 
+for $\verb|LETTER|$ and $\verb|IDENTIFIER|$ are not required. 
+To define the interpretation functions, we 
+let $a \in [\texttt{IDENTIFIER}]$, $b \in [\texttt{NNINTEGER}]$, and 
+let $\mathcal{E}$ be the interpretation function for 
+$\texttt{NNINTEGER}$ defined by \ref{e:E}.  
+The next 
+Backus-Naur form formalizes the writing instruction on variables:
+\begin{verbatim}
+DEFINE
+	: IDENTIFIER '=' NNINTEGER
+	;
+\end{verbatim}
+With $S$ as in \ref{e:states},
+we define $\mathcal{I}_1 \colon [\texttt{DEFINE}] \to \{S \to S\}$ for all $\sigma \in S$ by
+\begin{equation*}
+\big (\mathcal{I}_1 \llbracket a \verb|=| b \rrbracket (\sigma ) \big )(a) = \mathcal{E}\segcc{b} \text{ and }
+\forall_{x \neq a} \ \big (\mathcal{I}_1 \llbracket a \verb|=| b \rrbracket (\sigma ) \big )(x) = \sigma(x).
+\end{equation*}
+The next Backus-Naur form formalizes the reading instruction on variables. 
+\begin{verbatim}
+NNINTEGER_OR_ID
+	: IDENTIFIER
+	| NNINTEGER
+	;
+\end{verbatim}
+Define the interpretation function 
+$\mathcal{I}_2 \colon [ \verb|NNINTEGER_OR_ID| ] \to \{ S \to \mathbb{Z}_+\}$ for all $\sigma \in S$ by
+\begin{align*}
+\mathcal{I}_2 \segcc{a}(\sigma) &= \sigma(a), \\
+\mathcal{I}_2 \segcc{b}(\sigma) &= \mathcal{E}\segcc{b}.
+\end{align*}
+Finally, we define the start symbol of the context-free grammar 
+for the second example programming language as the nonterminal \verb|PROGRAM| defined 
+by the Backus-Naur form
+\begin{verbatim}
+PROGRAM
+	: NNINTEGER ' ' NNINTEGER
+	| DEFINE ' '            NNINTEGER_OR_ID ' ' NNINTEGER_OR_ID
+	| DEFINE ' ' DEFINE ' ' NNINTEGER_OR_ID ' ' NNINTEGER_OR_ID
+	;
+\end{verbatim}
+The second programming language is defined as $(F,G,T,\operatorname{id},\mathcal{I},\zeta)$,
+where $\mathcal{I} \colon [\texttt{PROGRAM}] \to F \cup \{ \zeta \}$ is now defined as follows.
+Let $p,q\in [\verb|NNINTEGER|]$, $s,t\in [\verb|NNINTEGER_OR_ID|]$, 
+let $\sigma_0 \in S$ satisfy $\sigma_0(x) = 0$ for all $x \in A$. 
+($\sigma_0$ is the initial state of the variables.) 
+We define 
+$\mathcal{I}\llbracket p \ q \rrbracket$ 
+by \ref{e:language:1:1}, and
+\begin{equation}
+\label{e:language:2:2}
+\mathcal{I}\llbracket a \verb|=| b \ s \ t \rrbracket = 
+\begin{cases} 
+\zeta , & \text{if } \mathcal{I}_2\segcc{s}(\sigma) = 0 \\
+x \mapsto (\mathcal{I}_2\segcc{s}(\sigma))^{-1} x^{\mathcal{I}_2\segcc{t}(\sigma)}, & \text{otherwise}
+\end{cases}
+\end{equation}
+where $\sigma = \mathcal{I}_1\llbracket a \verb|=| b \rrbracket (\sigma_0 ) $, and
+\begin{equation}
+\label{e:language:2:3}
+\mathcal{I}\llbracket a \verb|=| b \ c \verb|=| d \ s \ t\rrbracket = 
+\begin{cases} 
+\zeta , & \text{if } \mathcal{I}_2\segcc{s}(\tau)  = 0 \\
+x \mapsto (\mathcal{I}_2\segcc{s}(\tau))^{-1} x^{\mathcal{I}_2\segcc{t}(\tau)}, & \text{otherwise}
+\end{cases}
+\end{equation}
+where $\tau = \mathcal{I}_1\llbracket c \verb|=| d \rrbracket \big (\mathcal{I}_1\llbracket a \verb|=| b \rrbracket (\sigma_0) \big ) $, 
+$c \in [\texttt{IDENTIFIER}]$, $d \in [\texttt{NNINTEGER}]$.\\
+For example, use \ref{e:language:2:2} to obtain $\mathcal{I}\llbracket \verb|var=2 1 var|\rrbracket = x\mapsto x^2$ and 
+use \ref{e:language:2:3} to see that $\mathcal{I}$ maps \ref{e:program:2} to \ref{e:language:2:0} 
+with $\sigma$ defined as $\big (\mathcal{I}_1\llbracket \texttt{m=123} \rrbracket(\sigma_0),\mathcal{I}_1\llbracket \texttt{n=456} \rrbracket(\mathcal{I}_1\llbracket \texttt{m=123} \rrbracket(\sigma_0)) \big )$.
+
+
+Finally, we illustrate the concept of keywords using the last example programming language
+below. 
+Loosely speaking, a keyword %(or \begriff{reserved word}) 
+is a word
+over the valid graphical characters that
+cannot be used as a variable.  
+
+We are going to 
+define the last example programming language such that, e.g., the sequence
+\begin{equation}
+\label{e:language:3:ex}
+\verb|m=2 n=3 integral m n|,
+\end{equation}
+which includes the keyword \verb|integral|,
+possesses the same meaning as the program \verb|8 4| 
+in the previous programming languages. 
+The motivation for this keyword is the fact that
+$x \mapsto (m\cdot (n+1))^{-1}x^{n+1}$ is an antiderivative of 
+$x \mapsto m^{-1}x^n$ for all $m \in \mathbb{N}$, $n \in \mathbb{Z}_+$. 
+To define the third programming language, 
+we let the set of valid graphical characters $C$ equal \ref{e:graphicalcharacters} and
+let the context-free grammar $G$ be 
+defined by the Backus-Naur forms used in the second version 
+except that the Backus-Naur form
+related to $\verb|PROGRAM|$ is replaced by
+\begin{verbatim}
+PROGRAM
+	: NNINTEGER ' ' NNINTEGER
+	| DEFINE ' '            NNINTEGER_OR_ID ' ' NNINTEGER_OR_ID
+	| DEFINE ' ' DEFINE ' ' NNINTEGER_OR_ID ' ' NNINTEGER_OR_ID
+	| 'INTEGRAL' ' ' NNINTEGER ' ' NNINTEGER
+	| DEFINE ' '            'INTEGRAL' ' ' NNINTEGER_OR_ID ' ' NNINTEGER_OR_ID
+	| DEFINE ' ' DEFINE ' ' 'INTEGRAL' ' ' NNINTEGER_OR_ID ' ' NNINTEGER_OR_ID
+	;
+\end{verbatim}
+The major difference to the second programming language appears 
+in the set of terminals, which here equals
+\begin{equation*}
+\label{e:integralterminals}
+\{\verb|0|,\verb|1|,\verb|2|,\verb|3|,\verb|4|,\verb|5|,
+\verb|6|,\verb|7|,\verb|8|,\verb|9|,\verb|a|,\verb|b|,\verb|c|,\ldots,\verb|x|,\verb|y|,\verb|z|,\verb|=|,\verb*| |,\verb|INTEGRAL|\},
+\end{equation*}
+and in the tokenizer $\mathcal{T}$ which we define as follows.
+Let $\mathcal{T}$ satisfy
+\begin{equation}
+\label{e:tokenizer}
+\mathcal{T}\big (x(\verb|i|,\verb|n|,\verb|t|,\verb|e|,\verb|g|,\verb|r|,\verb|a|,\verb|l|)y\big )= \mathcal{T}(x)(\verb|INTEGRAL|)\mathcal{T}(y)
+\end{equation}
+for all $x,y \in C^\ast$, and if \ref{e:tokenizer} cannot be applied to the word $z\in C^\ast$
+then $\mathcal{T}(z) = z$.
+Consequences of the fact that the tokenizer 
+is not equal to the identity map will be illustrated 
+after completing the definition of the programming language.
+The third programming language is defined as $(F,G,C,\mathcal{T},\mathcal{I},\zeta)$,
+where the interpretation function 
+$\mathcal{I} \colon [\verb|PROGRAM|] \to F \cup \{ \zeta \}$ is here defined
+for the first three alternatives in the 
+Backus-Naur form by \ref{e:language:1:1},\ref{e:language:2:2},\ref{e:language:2:3}, respectively, 
+and for the remaining cases as follows. 
+Let $a,b,c,d,p,q,s,t,\sigma_0,\mathcal{I}_1,\mathcal{I}_2,\mathcal{E}$ be
+as in the context of \ref{e:language:2:2},\ref{e:language:2:3} and define
+\begin{equation*}
+\mathcal{I}\llbracket \verb|INTEGRAL| \ p \ q \rrbracket = 
+\begin{cases} \zeta, & \text{if } \mathcal{E}\segcc{p} = 0 \\
+x \mapsto (\mathcal{E}\segcc{p}\cdot (\mathcal{E}\segcc{q}+1) ) ^{-1} x^{\mathcal{E}\segcc{q}+1}, & \text{otherwise} \end{cases},
+\end{equation*}
+and
+\begin{equation*}
+\label{e:language:3:2}
+\mathcal{I}\llbracket a \verb|=| b \ \verb|INTEGRAL| \ s \ t \rrbracket = 
+\begin{cases} 
+\zeta , & \text{if } \mathcal{I}_2\segcc{s}(\sigma) = 0 \\
+x \mapsto (\mathcal{I}_2\segcc{s}(\sigma)\cdot (\mathcal{I}_2\segcc{t}(\sigma)+1))^{-1} x^{\mathcal{I}_2\segcc{t}(\sigma)+1}, & \text{otherwise}
+\end{cases}
+\end{equation*}
+where $\sigma = \mathcal{I}_1\llbracket a \verb|=| b \rrbracket (\sigma_0 ) $, and
+\begin{equation}
+\label{e:language:3:3}
+\mathcal{I}\llbracket a \verb|=| b \ c \verb|=| d \ \verb|INTEGRAL| \ s \ t\rrbracket = 
+\begin{cases} 
+\zeta , & \text{if } \mathcal{I}_2\segcc{s}(\tau)  = 0 \\
+x \mapsto (\mathcal{I}_2\segcc{s}(\tau)\cdot (\mathcal{I}_2\segcc{t}(\tau)+1))^{-1} x^{\mathcal{I}_2\segcc{t}(\tau)+1}, & \text{otherwise}
+\end{cases}
+\end{equation}
+where $\tau = \mathcal{I}_1\llbracket c \verb|=| d \rrbracket \big (\mathcal{I}_1\llbracket a \verb|=| b \rrbracket (\sigma_0) \big ) $.
+\\
+For example, use \ref{e:language:3:3} to see that 
+$\mathcal{I} \circ \mathcal{T}$ maps \ref{e:language:3:ex} 
+to $x \mapsto x^4/8$. Moreover, the word
+\begin{equation}
+\label{e:language:3:1}
+\verb|integral=1 n=2 integral n| 
+\end{equation}
+over $C$ is not a program as $\mathcal{T}$ maps \ref{e:language:3:1} to 
+$e =(\verb|INTEGRAL|,\verb|=|,\verb|1|,\texttt{\char32},\verb|n|,\verb|=|,\verb|2|,\texttt{\char32},\verb|INTEGRAL|,\texttt{\char32},\verb|n|)$ and $e$ is not produced from $(\verb|PROGRAM|)$. 
+In contrast,
+\ref{e:language:3:1} is a program of the second programming language.
+	

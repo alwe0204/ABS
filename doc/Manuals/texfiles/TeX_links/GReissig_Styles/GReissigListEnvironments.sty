@@ -1,0 +1,57 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% $LastChangedDate: 2022-03-31 17:24:15 +0200 (Do, 31 Mär 2022) $ (local)
+%%% $LastChangedRevision: 2600 $
+%%% $LastChangedBy: lf1agure $
+%%% $Id: GReissigListEnvironments.sty 2600 2022-03-31 15:24:15Z lf1agure $
+%%%
+%%% Gunther Reissig, 2003-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% \RequirePackage{enumitem}
+% Nachteile von enumitem:
+% 1. Durch andere Auffassung von \theenumi etc, muss man bei kumulierten
+% Referenzen explizit mit den Zaehlern der hoeheren Ebenen arbeiten,
+% zB in 2. Ebene: ref=(\roman{enumi}-\alph*)
+% Wenn man nun zB im top-level umschalten will auf arabische
+% Numerierung, dann musz man die Liste des 2. Levels auch
+% umdefinieren, sonst stimmen die Referenzen nicht. SEHR SCHLECHT
+% 2. Using ieeecolor.cls: not compatible, we need to
+% undefine \labelindent before loading package enumitem
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% We need to redefine refstepcounter to be able to use \p@... as
+% below:
+\RequirePackage{GReissigRefstepcounter}
+
+% top level:
+\AtBeginDocument{%
+\ifx\undefined\setlist% if package enumitem is used, then use its
+                      % features; otherwise, define own macros
+\def\labelenumi{(\theenumi)}
+\def\theenumi{\roman{enumi}}
+\def\p@enumi#1{(#1)}
+\else
+\setlist[enumerate,1]{label=(\roman*),leftmargin=0pt,itemindent=*,ref=(\roman*)}
+\fi
+%
+% 2nd level:
+\ifx\undefined\setlist%
+\def\labelenumii{(\theenumii)}
+\def\theenumii{\alph{enumii}}
+\def\p@enumii#1{(\theenumi-#1)}
+\else
+\setlist[enumerate,2]{label=(\alph*),leftmargin=0pt,itemindent=*,ref=(\roman{enumi}-\alph*)}
+\fi
+%
+% 3rd level:
+\ifx\undefined\setlist%
+\def\labelenumiii{(\theenumii\theenumiii)}
+\def\theenumiii{\arabic{enumiii}}
+\def\p@enumiii#1{(\theenumi-\theenumii\theenumiii)}
+\else
+\setlist[enumerate,3]{label=(\alph{enumii}\arabic*),leftmargin=0pt,itemindent=*,ref=(\roman{enumi}-\alph{enumii}\arabic*)}
+\fi
+%
+%\def\labelenumiv{(\theenumiv)}
+%\def\theenumiv{\Alph{enumiv}}
+%\def\p@enumiv#1{(\theenumi-\theenumii\theenumiii.#1)}
+}

@@ -1,0 +1,28 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% $LastChangedDate: 2022-04-12 16:57:33 +0200 (Di, 12 Apr 2022) $ (local)
+%%% $LastChangedRevision: 2635 $
+%%% $LastChangedBy: lf1agure $
+%%% $Id: GReissigPrepare.sty 2635 2022-04-12 14:57:33Z lf1agure $
+%%%
+%%% Gunther Reissig, 2022-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% This file provides some macros used in other style files by G
+% Reissig, and also defines requirements.
+%
+% To be loaded first!
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage{ifthen}
+
+% BEGIN: detect ACM document class
+\newif\ifACMclass
+% default value is false, we adjust:
+\ifx\@classname\undefined\else
+ \ifthenelse{\equal{\@classname}{acmart}}{\ACMclasstrue}{}
+\fi
+% END: detect ACM document class
+
+% use of pdflatex not permitted (as we regularly use \psfrag):
+\pdfoutput=0

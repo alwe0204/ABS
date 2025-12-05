@@ -1,0 +1,61 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% $LastChangedDate: 2022-04-01 17:47:39 +0200 (Fr, 01 Apr 2022) $ (local)
+%%% $LastChangedRevision: 2609 $
+%%% $LastChangedBy: lf1agure $
+%%% $Id: GReissigAMS.sty 2609 2022-04-01 15:47:39Z lf1agure $
+%%%
+%%% Gunther Reissig, 2003-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+\RequirePackage{amssymb}
+\RequirePackage{amsfonts}
+
+% for beamer class:
+%\ifx\defbeamertemplate\undefined% amsmath clashes w/ beamer
+%\RequirePackage[cmex10]{amsmath}
+\RequirePackage{amsmath}
+\interdisplaylinepenalty=2500% allow page breaks within multiline equations
+%\fi
+% Numerierung VOR theorem ermoeglichen; einschalten mit
+% \setbeamertemplate{theorems}[numberedBEFORE]
+\ifx\defbeamertemplate\undefined\else%
+\defbeamertemplate{theorem begin}{numberedBEFORE}
+{%
+  \begin{\inserttheoremblockenv}
+    {%
+      \inserttheoremnumber\,\inserttheoremname
+      \ifx\inserttheoremaddition\@empty\else\ (\inserttheoremaddition)\fi%
+    }%
+}
+\fi
+
+%%%%%%%%%% equation arrays %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% do not use environment eqnarray:
+\let\eqnarray\@undefined
+\let\endeqnarray\@undefined
+% provide environment IEEEeqnarray instead (copied from ieeecolor.cls):
+% hook to allow easy changeover to IEEEtran.cls/tools.sty error reporting
+\def\@IEEEclspkgerror{\ClassError{IEEEtran}}
+
+\newif\if@IEEEeqnarraystarform% flag to indicate if the environment was called as the star form
+\@IEEEeqnarraystarformfalse
+
+\newif\if@advanceIEEEeqncolcnt% tracks if the environment should advance the col counter
+% allows a way to make an \IEEEeqnarraybox that can be used within an \IEEEeqnarray
+% used by IEEEeqnarraymulticol so that it can work properly in both
+\@advanceIEEEeqncolcnttrue
+
+\newcount\@IEEEeqnnumcols % tracks how many IEEEeqnarray cols are defined
+\newcount\@IEEEeqncolcnt  % tracks how many IEEEeqnarray cols the user actually used
+
+
+% The default math style used by the columns
+\def\IEEEeqnarraymathstyle{\displaystyle}
+% The default text style used by the columns
+% default to using the current font
+\def\IEEEeqnarraytextstyle{\relax}
+
+% like the iedlistdecl but for \IEEEeqnarray
+\def\IEEEeqnarraydecl{\relax}
+\def\IEEEeqnarrayboxdecl{\relax}
+%%%%%%%%%% END: equation arrays %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

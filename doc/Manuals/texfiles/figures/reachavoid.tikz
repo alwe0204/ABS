@@ -1,0 +1,37 @@
+﻿\begin{tikzpicture}[scale=0.7, every node/.style={scale=0.8}]
+\definecolor{lightblue}{rgb}{.55,0.55,1}
+\draw[fill=green] (-5,1) rectangle (-4,2);
+\draw[fill=lightblue] (-2.5,-5) rectangle (-1.5,4.5);
+\draw[fill=lightblue] (1.5,-2.5) rectangle (3,7.5);
+\draw[fill=red] (4.5,6) rectangle (6.5,8);
+\node at (7,7) {\Large{$A_\mathrm{r}$}};
+\node[inner sep=0,label=right:{$x_c(0)$}] (vT0) at (-4.15,1.7) {};
+\node[inner sep=0,label=above left:{$x_c(1)$}] (vT1) at (-3.6,4.75) {};
+\node[inner sep=0,label=above left:{$x_c(2)$}] (vT2) at (-2.5,6.12) {};
+\node[inner sep=0,label=above right:{$x_c(3)$}] (vT3) at (-0.85,6.2) {};
+\node[inner sep=0,label=left:{$x_c(4)$}] (vT4) at (0,3.7) {};
+\node[inner sep=0,label=left:{$x_c(5)$}] (vT5) at (0.1,2.0) {};
+\node (vT6) at (0.2,-.5) {};
+\node[inner sep=0,label=right:{$x_c(T-2)$}] (vTminus2) at (4.5,-0.5) {};
+\node[inner sep=0,label=right:{$x_c(T-1)$}] (vTminus1) at (5,3.5) {};
+\node[inner sep=0,label=above:{$x_c(T)$}] (vT) at (5.8,6.6) {};
+\draw[fill=black] (vT0) circle (3.5pt);
+\draw[fill=black] (vT1) circle (3.5pt);
+\draw[fill=black] (vT2) circle (3.5pt);
+\draw[fill=black] (vT3) circle (3.5pt);
+\draw[fill=black] (vT4) circle (3.5pt);
+\draw[fill=black] (vT5) circle (3.5pt);
+\draw[fill=black] (vTminus2) circle (3.5pt);
+\draw[fill=black] (vTminus1) circle (3.5pt);
+\draw[fill=black] (vT) circle (3.5pt);
+\node (vTminus3) at (6,-3.5) {};
+\draw[dashed] (vTminus3) -- (vTminus2);
+\draw[] (vTminus2) -- (vTminus1) -- (vT);
+\draw[dashed] (vT6) -- (vT5);
+\draw[] (vT5) -- (vT4) -- (vT3) -- (vT2) -- (vT1) -- (vT0);
+\coordinate (v1) at (-1.75,-4.5) {};
+\node[inner sep=0,label=below right:{\Large{$A_\mathrm{a}$}}] (v2) at (1.75,-4.25) {};
+\coordinate (v3) at (2,-2) {};
+\draw (v1) -- (v2) -- (v3);
+\node at (-4.5,0.5) {\Large{$A_0$}};
+\end{tikzpicture}

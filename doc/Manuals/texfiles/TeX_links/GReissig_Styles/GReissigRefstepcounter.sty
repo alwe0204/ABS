@@ -1,0 +1,26 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% $LastChangedDate: 2022-03-31 17:24:15 +0200 (Do, 31 Mär 2022) $ (local)
+%%% $LastChangedRevision: 2600 $
+%%% $LastChangedBy: lf1agure $
+%%% $Id: GReissigRefstepcounter.sty 2600 2022-03-31 15:24:15Z lf1agure $
+%%%
+%%% Gunther Reissig, 2003-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+%%%%%% generalization of \refstepcounter, p@equation
+\def\refstepcounter#1{\stepcounter{#1}%
+    \protected@edef\@currentlabel
+       {\csname p@#1\endcsname{\csname the#1\endcsname}}%
+}
+%\csname  the#1\endcsname was put between braces in order to allow
+%the user to define \p@foo as a function, e.g. \def\p@equation#1{(#1)}.
+%However, the old form remains applicable, e.g. \def\p@equation{Equ.~}
+%is still working.
+
+% \ref should take care of as much as possible:
+% we do NOT need \eqref anymore:
+\def\p@equation#1{(#1)}
+\def\p@table#1{Tab.~#1}
+\def\p@figure#1{\iflanguage{german}{Abb.~#1}{Fig.~#1}}
+% we do not permit using \eqref, just use \ref instead:
+\let\eqref\@undefined

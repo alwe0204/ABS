@@ -1,0 +1,12 @@
+Interval X;
+X = [0,2*Pi];
+f: x in X to y
+{
+	y = cos(x);
+}
+phi: (t,x) in ([0,1],X) to z
+{
+	initialvalue(z,x);
+	diff(z,t) = f(z);
+}
+

@@ -1,0 +1,16 @@
+with "../../ABSLibrary.gpr";
+limited with "../../readwrite/ABSLibrary/readwrite.gpr";
+limited with "../../readonly/ABSLibrary/readonly.gpr";
+
+project hidden is
+
+ for Externally_Built use "true";
+
+ for Languages use ("ada");
+
+ for Object_Dir use "../../../obj/hidden/ABSLibrary/" & ABSLibrary.os & "/" & ABSLibrary.mode ;
+ for Source_Dirs use ("./**","../../../body/hidden/ABSLibrary/**");
+ package Compiler renames ABSLibrary.Compiler;
+ package Linker renames ABSLibrary.Linker;
+
+end hidden;

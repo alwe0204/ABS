@@ -1,0 +1,22 @@
+with "../../ABSLibrary.gpr";
+limited with "../../readonly/ABSLibrary/readonly.gpr";
+limited with "../../hidden/ABSLibrary/hidden.gpr";
+
+project readwrite is
+ for Languages use ("ada","C");
+
+ for Object_Dir use "../../../obj/readwrite/ABSLibrary/" & ABSLibrary.os & "/" & ABSLibrary.mode ;
+case ABSLibrary.Variant is
+when "without_main" => 
+ for Source_Dirs use ("./**","../../../body/readwrite/ABSLibrary/**");
+ for Excluded_Source_Files use ("main.adb", "problem_loading.adb", "problem_loading.ads","dynamics_specification_parameters.ads");
+when "with_problem" => 
+ for Source_Dirs use ("./**","../../../body/readwrite/ABSLibrary/**");
+ for Excluded_Source_Files use ("main.adb");
+when "with_main" => 
+ for Source_Dirs use ("./**","../../../body/readwrite/ABSLibrary/**");
+end case;
+ package Compiler renames ABSLibrary.Compiler;
+ package Linker renames ABSLibrary.Linker;
+
+end readwrite;

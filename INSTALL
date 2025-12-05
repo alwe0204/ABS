@@ -1,0 +1,10 @@
+# INSTALL
+#
+# created by Alexander Weber, Feb 2017
+# $Id: INSTALL 1123 2017-05-11 11:05:40Z lf1agure $
+#
+# Starting point of a first-time user.
+# 
+In the directory of the present file run
+   > make manuals hint_manuals hint_readdoc
+and follow the instructions on the screen to open the programmer's manual.

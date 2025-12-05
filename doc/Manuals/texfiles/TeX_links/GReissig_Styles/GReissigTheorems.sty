@@ -1,0 +1,103 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% $LastChangedDate: 2022-03-31 17:24:15 +0200 (Do, 31 Mär 2022) $ (local)
+%%% $LastChangedRevision: 2600 $
+%%% $LastChangedBy: lf1agure $
+%%% $Id: GReissigTheorems.sty 2600 2022-03-31 15:24:15Z lf1agure $
+%%%
+%%% Gunther Reissig, 2003-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% before loading amsthm, we undefine proof environment, just in case
+% we are using ieeecolor.cls, which defines another (less smart) proof
+% environment:
+\let\proof\@undefined
+\let\endproof\@undefined
+\RequirePackage{amsthm}
+
+\ifx\undefined\theorem
+% Theorem Styles:
+%\def\myproofname{\iflanguage{german}{Beweis}{Proof}}
+\newtheoremstyle{thm}{\topsep}{\topsep}{\itshape}{0pt}{\bfseries}{.}{ }{\thmnumber{#2 }\thmname{#1}\thmnote{ \textup{(#3)}}}
+\newtheoremstyle{rem}{\topsep}{\topsep}{\normalfont}{0pt}{\bfseries}{.}{ }{\thmnumber{#2 }\thmname{#1}\thmnote{ \textup{(#3)}}}
+\newtheoremstyle{hyp}{\topsep}{\topsep}{\normalfont}{0pt}{\bfseries}{}{ }{(\thmname{#1}{\boldmath\ensuremath{_{\thmnumber{#2}}}})\thmnote{ \textup{(#3)}}}
+\newtheoremstyle{hyp*}{\topsep}{\topsep}{\normalfont}{0pt}{\bfseries}{}{ }{(\thmname{#1})\thmnote{ \textup{(#3)}}}
+\newtheoremstyle{hypwithsuperscript}{\topsep}{\topsep}{\normalfont}{0pt}{\bfseries}{}{ }{(\thmname{#1}{\boldmath\ensuremath{_{\thmnumber{#2}}^K}})\thmnote{ \textup{(#3)}}}
+
+\ifx\IEEEtheorems\undefined
+\theoremstyle{thm}
+\ifx\definition\undefined%
+\newtheorem{definition}{Definition}[section]%
+% same, but w/o numbering:
+\newtheorem*{definitionNoNumber}{Definition}%
+\fi
+\newtheorem{theorem}[definition]{\iflanguage{german}{Satz}{Theorem}}
+\newtheorem{lemma}[definition]{Lemma}
+\newtheorem{proposition}[definition]{Proposition}
+\newtheorem{corollary}[definition]{\iflanguage{german}{Folgerung}{Corollary}}
+% same, but w/o numbering:
+\newtheorem*{theoremNoNumber}{\iflanguage{german}{Satz}{Theorem}}
+\newtheorem*{lemmaNoNumber}{Lemma}
+\newtheorem*{propositionNoNumber}{Proposition}
+\newtheorem*{corollaryNoNumber}{\iflanguage{german}{Folgerung}{Corollary}}
+\else
+% special definitions for final versions of papers written with IEEE
+% style. needed because body font is normal, hence, \box at the end to
+% mark end of theorem:
+\theoremstyle{rem}
+\ifx\definition\undefined%
+\newtheorem{definition}{\pushQED{\qed}Definition}[section]%
+% same, but w/o numbering:
+\newtheorem*{definitionNoNumber}{\pushQED{\qed}Definition}%
+\fi
+\newtheorem{theorem}[definition]{\pushQED{\qed}\iflanguage{german}{Satz}{Theorem}}
+\newtheorem{lemma}[definition]{\pushQED{\qed}Lemma}
+\newtheorem{proposition}[definition]{\pushQED{\qed}Proposition}
+\newtheorem{corollary}[definition]{\pushQED{\qed}\iflanguage{german}{Folgerung}{Corollary}}
+% same, but w/o numbering:
+\newtheorem*{theoremNoNumber}{\pushQED{\qed}\iflanguage{german}{Satz}{Theorem}}
+\newtheorem*{lemmaNoNumber}{\pushQED{\qed}Lemma}
+\newtheorem*{propositionNoNumber}{\pushQED{\qed}Proposition}
+\newtheorem*{corollaryNoNumber}{\pushQED{\qed}\iflanguage{german}{Folgerung}{Corollary}}
+\fi
+
+\theoremstyle{hyp}
+\newtheorem{hypothesis}{H}
+\def\p@hypothesis#1{(H{\ensuremath{_{\thmnumber{#1}}}})}
+\newtheorem{hypothesisH}{H}
+\def\p@hypothesisH#1{(H{\ensuremath{_{\thmnumber{#1}}}})}
+\newtheorem{hypothesisA}{A}
+\def\p@hypothesisA#1{(A{\ensuremath{_{\thmnumber{#1}}}})}
+\newtheorem{hypothesisC}{C}
+\def\p@hypothesisC#1{(C{\ensuremath{_{\thmnumber{#1}}}})}
+\newtheorem{hypothesisG}{G}
+\def\p@hypothesisG#1{(G{\ensuremath{_{\thmnumber{#1}}}})}
+
+\theoremstyle{rem}
+\newtheorem{remark}[definition]{\pushQED{\qed}\iflanguage{german}{Bemerkung}{Remark}}
+\newtheorem{example}[definition]{\pushQED{\qed}\iflanguage{german}{Beispiel}{Example}}
+\newtheorem{cexample}[definition]{\pushQED{\qed}\iflanguage{german}{Gegenbeispiel}{Counterexample}}
+\ifx\exercise\undefined
+\newtheorem{exercise}[definition]{\pushQED{\qed}\iflanguage{german}{Aufgabe}{Exercise}}
+\fi
+\newtheorem{problem}[definition]{\pushQED{\qed}Problem}
+\fi
+% Append \QED to ``theorems'', provided the latter are set in normal
+% font:
+% automatic detection:
+%\def\EndQEDUmgebung{%
+%\ifdim\fontdimen\@ne\font>\z@\relax\else\popQED\fi%
+%\@endtheorem%
+%}
+\def\enddefinition{\popQED\@endtheorem}
+\def\endtheorem{\popQED\@endtheorem}
+\def\endlemma{\popQED\@endtheorem}
+\def\endproposition{\popQED\@endtheorem}
+\def\endcorollary{\popQED\@endtheorem}
+%
+\def\endremark{\popQED\@endtheorem}
+\def\endexample{\popQED\@endtheorem}
+\def\endcexample{\popQED\@endtheorem}
+\def\endexercise{\popQED\@endtheorem}
+\def\endproblem{\popQED\@endtheorem}
+%\def\endproof{\popQED\@endproof}
+%\def\endexercise{\EndQEDUmgebung}

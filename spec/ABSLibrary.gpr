@@ -1,0 +1,59 @@
+limited with "./readwrite/ABSLibrary/readwrite.gpr" ;
+limited with "./readonly/ABSLibrary/readonly.gpr" ;
+limited with "./hidden/ABSLibrary/hidden.gpr" ;
+project ABSLibrary is
+
+ type Mode_Type is ("debug","release");
+ Mode : Mode_Type := external ("mode", "debug");
+
+ type OS_Type is ("x86_64-linux-gnu",
+                  "x86_64-pc-linux-gnu",
+                  "x86_64-suse-linux");
+
+ OS : OS_Type := external ("os", "x86_64-linux-gnu");
+
+ type Variant_Type is ("without_main","with_main","with_problem");
+ Variant : Variant_Type := external("v","without_main");
+
+ GMP  := "gmp-6.1.2";
+ MPFR := "mpfr-3.1.5";
+ MPFI := "mpfi-1.5.1";
+
+
+ for Source_Files use ();
+
+ package Ide is
+ for Documentation_Dir use "../doc/ABSLibrary";
+ end Ide;
+
+ package Compiler is
+  case Mode is
+   when "debug" => 
+   for Switches ("ada") use ("-gnatf", "-gnat12","-g","-gnato");
+   for Switches ("C") use ("-g", "-Wall", "-std=c99",
+                                   "-I../../../../../spec/readwrite/ProblemCompiler/misc/", 
+                                   "-I../../../../../libs/" & MPFI & "/src", 
+                                   "-I../../../../../libs/" & MPFR & "/src", 
+                                   "-I../../../../../libs/" & GMP);
+   when "release" =>
+   for Switches ("ada") use ("-gnatf", "-gnat12","-O2","-gnato");
+   for Switches ("C") use ("-O2", "-Wall", "-std=c99",
+                                   "-I../../../../../spec/readwrite/ProblemCompiler/misc/", 
+                                   "-I../../../../../libs/" & MPFI & "/src", 
+                                   "-I../../../../../libs/" & MPFR & "/src", 
+                                   "-I../../../../../libs/" & GMP);
+  end case;
+ end Compiler;
+ package Linker is
+  for Default_Switches ("Ada") use ("-Wl,-Bstatic", 
+                                      "-L../../../libs/" & MPFI & "/src/.libs", "-lmpfi", 
+                                      "-L../../../libs/" & MPFR & "/src/.libs", "-lmpfr",
+                                      "-L../../../libs/" & GMP & "/.libs", "-lgmp", 
+                                      "-Wl,-Bdynamic", "-lm");
+ for Default_Switches ("C") use ("-Wl,-Bstatic", 
+                                      "-L../../../libs/" & MPFI & "/src/.libs", "-lmpfi", 
+                                      "-L../../../libs/" & MPFR & "/src/.libs", "-lmpfr",
+                                      "-L../../../libs/" & GMP & "/.libs", "-lgmp",
+                                      "-Wl,-Bdynamic", "-lm");
+ end Linker;
+end ABSLibrary;

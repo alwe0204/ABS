@@ -1,0 +1,50 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% $LastChangedDate: 2022-04-07 18:14:16 +0200 (Do, 07 Apr 2022) $ (local)
+%%% $LastChangedRevision: 2630 $
+%%% $LastChangedBy: lf1agure $
+%%% $Id: file_operations.tex 2630 2022-04-07 16:14:16Z lf1agure $
+%%%
+%%% created by G Reissig, Apr 2017
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% basic macros providing file operations
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage{GReissigGeneral}% loads package svn-multi
+\svnid{$Id: file_operations.tex 2630 2022-04-07 16:14:16Z lf1agure $}
+
+% locally define the following macros:
+% \ReadSingleLine, \SkipCommentLines
+
+%%%%%%%%%%%%%%%%%%%%% \ReadSingleLine %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% reads single line and stores it in global variable
+% expects \fullfilename as well as readable open stream \file
+% defines argument, which should be a macro name
+\def\ReadSingleLine#1{%
+  \ifeof\file
+    \errmessage{Unable to read from file \fullfilename}
+  \else
+    \readline \file to \line
+    \xdef#1{\line}
+%    \xdef#1{\expandafter\detokenize\expandafter{#1}}
+  \global\let\line\@undefined
+  \fi
+}
+%%% END: \ReadSingleLine
+
+%%%%%%%%%%%%%%%%%%%%% \SkipCommentLines %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% skips leading comment lines in file
+% expects \fullfilename as well as readable open stream \file
+\def\SkipCommentLines{%
+  \newcount\mylinecounter \mylinecounter=0
+  \endlinechar=-1 % suppress end of line chars
+  \ReadSingleLine\NumberOfCommentLines % read number of comment lines
+  \loop
+    \ifnum \mylinecounter < \NumberOfCommentLines \advance\mylinecounter by 1
+    \ReadSingleLine\dummy
+  \repeat
+  \global\let\dummy\@undefined
+  \global\let\NumberOfCommentLines\@undefined
+  \global\let\c@mylinecounter\@undefined
+}
+%%% END: \SkipCommentLines
+

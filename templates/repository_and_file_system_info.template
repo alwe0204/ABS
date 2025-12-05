@@ -1,0 +1,32 @@
+31
+%  1 % repository_and_file_system_info.txt
+%  2 %
+%  3 % Do not change, do not commit into repository !
+%  4 % This is an automatically generated file; its contents is to be
+%  5 % used in the documentation and in log files.
+%  6 %
+%  7 % created by G Reissig, Apr 2017
+%  8 %
+%  9 % version information, see programmer's manual
+% 10 %
+% 11 % $Id: repository_and_file_system_info.template 2645 2022-04-19 14:29:02Z lf1agure $
+% 12 % ---------------------------------------------------------------
+% 13 % Structure of this file:
+% 14 % - line 1: NOC = number of comment lines
+% 15 % - the following NOC lines: comments
+% 16 % - line 1 following comments: root address of repository
+% 17 % - line 2 following comments: root address of this software
+% 18 %   project in repository
+% 19 % - line 3 following comments: root address of this branch of
+% 20 %   software project in repository
+% 21 % - line 4 following comments: root directory of working copy of this branch
+% 22 %   in local file system
+% 23 % - line 5 following comments: date and time when most recent changes to this
+% 24 %   branch have been committed into repository; in xml format
+% 25 %   with 'T' substituted by '/'
+% 26 % - line 6 following comments: revision number in repository,
+% 27 %   of most recent changes to this branch
+% 28 %
+% 29 %
+% 30 %
+% 31 % ---------------------------------------------------------------

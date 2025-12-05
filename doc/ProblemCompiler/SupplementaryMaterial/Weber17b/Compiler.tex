@@ -1,0 +1,170 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% $Id: Compiler.tex 2071 2020-06-11 11:32:06Z lf1agure $
+%%% Alexander Weber, 2017
+%%%
+%%% Part of Alexander Weber's language definition [Weber17b]
+%%%
+%%% BibTeX keys coincide with Gunther Reissig's BibTeX database, but
+%%% list of references is currently hard coded in the file
+%%% Weber17b.bbl
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Compiler for Taylor coefficients}
+\label{s:compiler}
+\subsection{Introduction}
+\label{ss:compiler:intro}
+We discuss in this section an application of the programming language. 
+In fact, we construct a compiler
+for obtaining approximations to solutions of ordinary differential equations of the form \ref{e:ode} and \ref{e:ode:2}
+by means of Taylor polynomials. By a \begriff{compiler} we mean a map $C^\ast \to C^\ast$. 
+
+The said approximation technique has been studied for a long time (cf. \cite{HairerNorsettWanner87i}) and we briefly outline
+it below. We consider subsequently only the case of \ref{e:ode}. The description for of the case \ref{e:ode:2}
+is similar. 
+
+Given a solution $\varphi$ of \ref{e:ode} on $(I,X_0,U_0)$ then the approximating function is formally
+the Taylor polynomial of $\varphi$ of a specified order $p \in \mathbb{N}$, i.e., 
+the function $\hat \varphi$ defined on $I \times X_0 \times U_0$ by
+\begin{equation}
+\label{e:Taylor}
+\hat \varphi(t,x,u) = \sum_{i=0}^p \frac{1}{i!}D_1^i\varphi(0,x,u)t^i.
+\end{equation}
+The key property of \ref{e:Taylor} is that the coefficients in \ref{e:Taylor} can be recursively computed by means of the right hand side $f$, e.g. \cite{Moore66}. 
+(This computation technique is discussed later.) Moreover, a bound on the error $|\varphi(t,x) - \hat \varphi(t,x)|$ can be easily computed.
+These facts imply the following application on the programming language. 
+
+Given a program $P$ that specifies a function $\psi$ of the form \ref{e:psi} 
+(recall that $\psi$ is by definition closely related to a solution of \ref{e:ode}) 
+then the $p$-th Taylor coefficient
+\begin{equation}
+\label{e:coefficient}
+D_1^p\psi(0,y_1,\ldots,y_k,u_1,\ldots,u_m)/p!
+\end{equation}
+is a finite composition of the functions $+,-,\cdot,\div$ and those listed in the Backus-Naur form for \verb|call_function|. 
+Thus, the $p$-th Taylor coefficient can be represented by a program. 
+Therefore, we obtain a compiler assigning to $P$ a program 
+representing \ref{e:coefficient}. As we will see, the program will indeed represent all coefficients up to order $p$. 
+\subsection{Specification}
+We now formalize the specification the compiler shall meet. To this end, let us define
+$F_\mathrm{sol}$ as the set of functions in $F$ of class $C^\infty$ 
+where additionally the first component of their domain equals a closed interval including $0$.
+Furthermore, let $T_p \colon F_\mathrm{sol} \to F$ be defined by 
+$$T_p(\psi)(x) = (\psi(0,x),D^1_1\psi(0,x),\ldots,D^p_1\psi(0,x))^\top,$$ where $(0,x) \in \dom \psi$.
+%\begin{equation}
+%T_n(x)(t) = \sum_{k=0}^n x^{(k)}(0)t^k/k!
+%\end{equation}
+%Obviously, $T_n(\varphi)(t)$ is an approximation of $\varphi(t,x_0,u)$. 
+%The coefficients $c_k$ in \ref{e:Taylor} can be expressed so that 
+%
+We shall define a compiler $\mathcal{C}_p \colon C^\ast \to C^\ast$ that satisfies
+\begin{equation}
+\label{e:specification}
+\mathcal{I}_\mathrm{prog} \circ \mathcal{T} \circ \mathcal{C}_p(P) = T_p \circ \mathcal{I}_\mathrm{prog} \circ \mathcal{T}(P)
+\end{equation}
+for all programs $P$ whose image under $\mathcal{T}$ is produced from 
+the alternatives 3, 4, 7 or 8 in the Backus-Naur form for \verb|program|. Clearly, this restriction on $P$
+implies that the right hand side of \ref{e:specification} is well-defined.
+%
+In words, condition \ref{e:specification}
+states that $\mathcal{C}_p$ shall return a program that represents the sequence of Taylor coefficients.
+\subsection{Automatic differentiation}
+\label{ss:ad}
+In order compute \ref{e:coefficient} we will utilize automatic differentiation \cite{GriewankWalther08}. 
+We give below
+a brief exposition of this technique as required for constructing the compiler. To begin with, we 
+first describe the functions that can be explicitly represented by a program.
+\begin{lemma}
+\label{th:composition}
+Let $\sigma \in S_\mathrm{fct}$.
+Then every component of the function $\mathcal{F}(\sigma)$ 
+is a finite composition of the following maps $\overline{\mathbb{R}} \times \overline{\mathbb{R}} \to \overline{\mathbb{R}}$ defined by $(\zeta,x) \mapsto \zeta$, $(x,\zeta) \mapsto \zeta$ and otherwise:
+\begin{itemize}
+\renewcommand\labelitemi{$\cdot$}
+\item $(x_1,x_2) \mapsto a$, $a \in \mathbb{R}$
+\item $(x_1,x_2) \mapsto x_1 + x_2$
+\item $(x_1,x_2) \mapsto x_1 - x_2$
+\item $(x_1,x_2) \mapsto x_1 \cdot x_2$
+\item $(x_1,x_2) \mapsto x_1 /x_2$
+\item $(x_1,x_2) \mapsto x_1^{x_2}$
+\item $(x_1,x_2) \mapsto \exp(x_1)$
+\item $(x_1,x_2) \mapsto \log(x_1)$
+\item $(x_1,x_2) \mapsto \sin(x_1)$
+\item $(x_1,x_2) \mapsto \cos(x_1)$
+%\item $\R \times \R \to \R$, $(x_1,x_2) \mapsto \sinh(x_1)$
+%\item $\R \times \R \to \R_+$, $(x_1,x_2) \mapsto \cosh(x_1)$
+\end{itemize}
+%Moreover, $f$ is infinitely differentiable on the interior of $X$.
+\end{lemma}
+\begin{proof}
+The claim follows from the definition of \ref{e:programminglanguage} and \cite[Prop.~2.1]{GriewankWalther08}.
+\end{proof}
+A consequence of Lemma \ref{th:composition} is the following theorem.
+\begin{theorem}
+\label{th:evaluationtrace}
+Under the hypotheses of Lemma \ref{th:composition} with $f \defas \mathcal{F}(\sigma)$
+there exist $\ell \in \mathbb{N}$ and $v_i \colon \mathcal{D}(\sigma) \to \overline{\mathbb{R}}$, $i \in \intoc{-m;\ell}$ such that for all $x \in \mathcal{D}(\sigma)$ we have
+\begin{enumerate}
+\item $v_{i-m}(x) = x_i$ for all $i \in \intcc{1;m}$,
+\item $v_{\ell+1-i}(x) = f_i(x)$ for all $i \in \intcc{1;n}$,
+\item for all $i \in \intcc{1;\ell}$ there exist $\alpha(i),\beta(i) \in \intoo{-m;i}$ such that
+\begin{equation}
+v_i(x) = g_i(v_{\alpha(i)}(x),v_{\beta(i)}(x)),
+\end{equation}
+where $g_i$ is a function listed in Lemma \ref{th:composition}.
+\end{enumerate}
+\end{theorem}
+The sequence $(g_i,v_{\alpha(i)},v_{\beta(i)})_{i \in \intcc{1;\ell}}$ in Theorem \ref{th:evaluationtrace} is called 
+an \begriff{evaluation trace (of length $\ell$) of $f$} \cite{GriewankWalther08}. The set of all evaluation traces is denoted by $V$.
+
+In order to simplify notation, 
+we introduce for $n$-times continuously differentiable $f\colon I \to \mathbb{R}$, 
+$I \subseteq \mathbb{R}$ open, \begriff{normalized derivatives} $D^{[n]}f \colon I \to \mathbb{R}$ defined as 
+\begin{equation}
+D^{[n]}f(t) = \frac{1}{n!} D^n f(t).
+\end{equation}
+
+\begin{proposition}
+\label{prop:ad}
+Let $\alpha \in \mathbb{R} \setminus \{0\}$, $a,b,c \colon I \to \mathbb{R}$ $n$-times continuously differentiable, $I \subseteq \mathbb{R}$ open, $n \in \mathbb{N}$. We have: 
+\begin{itemize}
+\renewcommand\labelitemi{$\cdot$}
+\item $D^{[n]}(a(t) + b(t)) = D^{[n]}a(t) + D^{[n]}b(t)$.
+\item $D^{[n]}(a(t)\cdot b(t)) =\sum_{i=0}^n D^{[n-i]}a(t)\cdot D^{[i]}b(t)$.
+\item If $c(t) \neq 0$ for all $t \in X$ and $a(t)= b(t)/c(t)$ then 
+\begin{equation*}
+D^{[n]}a(t) = \frac{1}{c(t)} \left ( D^{[n]}b(t) - \sum_{i=1}^n D^{[i]}c(t)D^{[n-i]}a(t) \right ).
+\end{equation*}
+\item If $b(t)> 0$ for all $t \in X$ and $a(t) = b(t)^\alpha$ then 
+\begin{equation*}
+D^{[n]}a(t) = \frac{1}{nb(t)} \sum_{i=0}^{n-1} ( n \alpha - i ( \alpha +1 ) ) D^{[n-i]}b(t) D^{[i]}a(t).
+\end{equation*}
+\item If $a(t) = \exp(b(t))$ then $D^{[n]}a(t) = \frac{1}{n}\sum_{i=0}^{n-1} ( n - i ) D^{[i]}a(t) D^{[n-i]}b(t)$.
+\item If $b(t)\geq 0$ for all $t \in X$ and $a(t) = \log b(t)$, then 
+\begin{equation*}
+D^{[n]}a(t)=\frac{1}{b(t)} \left ( D^{[n]}b(t)- \frac{1}{n}\sum_{i=1}^{n-1} (n-i)D^{[i]}b(t) D^{[n-i]}a(t) \right )
+\end{equation*}
+\item If $a(t) = \cos c(t)$ and $b(t) = \sin c(t)$ then
+\begin{align*}
+D^{[n]}a(t) &= - \frac{1}{n} \sum_{i=1}^n i D^{[n-i]}b(t)D^{[i]} c(t), \\
+D^{[n]}b(t) &= \frac{1}{n} \sum_{i=1}^n i D^{[n-i]} a(t) D^{[i]} c(t).
+\end{align*}
+\end{itemize}
+\end{proposition}
+For a proof of previous proposition see \cite[Sec. 1.1.4]{Lohner88}.
+
+By virtue of previous proposition, we may now compute the $p$-th Taylor coefficient provided that an evaluation trace $\Lambda = (g_i,v_{\alpha(i)},v_{\beta(i)})_{i \in \intcc{1;\ell}}$ of $f$ is available. In fact, 
+we apply Proposition \ref{prop:ad} successively from $n=1$ to $n=p$ to every entry of $\Lambda$ and with $x(t) \defas \varphi(t,x_0,u_0)$. 
+Consequently, observing that the $i$-th component of the $(n+1)$-th Taylor coefficient equals $D^{[n]} x(0)$
+is given by 
+\begin{equation}
+D^{[n+1]}v_{i-m}(x(0)) = D^{[n+1]}x_i(0) = \frac{1}{n+1} D^{[n]}v_{\ell+1-i}(x(0)).
+\end{equation}
+\subsection{The compiler}
+\label{ss:compiler}
+We define the compiler $\mathcal{C}$ by specifying two maps 
+\begin{align*}
+& \operatorname{eval}_p \colon F_\mathrm{sol} \to V \\
+& \operatorname{print} \colon V \to C^\ast 
+\end{align*}
+and setting $\mathcal{C}_p = \operatorname{print} \circ \operatorname{eval}_p$.
+We choose an identifier $v \in A$ such that $\sigma(v) = \sigma_0(v)$. The print function produces an element in $C^\ast$ by transforming every entry of $\Lambda$
+to a word over $C$ which equals $v\verb|[|a\verb|]=|$.

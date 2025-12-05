@@ -1,0 +1,18 @@
+with "../../ABSLibrary.gpr";
+
+project test_ro is
+
+ for Languages use ("ada");
+ for Source_Dirs use ("./**","../../../body/test_ro/ABSLibrary/**");
+ for Object_Dir use "../../../obj/test_ro/ABSLibrary/" & ABSLibrary.os & "/" & ABSLibrary.mode ;
+ for Exec_Dir use "../../../bin/" & ABSLibrary.os & "/" & ABSLibrary.mode ;
+
+ -- Enter new tests below --
+ for Main use (
+ "test_grids.adb"
+ );
+
+ package Compiler renames ABSLibrary.Compiler;
+ package Linker renames ABSLibrary.Linker;
+
+end test_ro;

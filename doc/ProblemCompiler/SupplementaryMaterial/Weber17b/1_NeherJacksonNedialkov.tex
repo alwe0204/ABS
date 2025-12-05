@@ -1,0 +1,30 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% $Id: 1_NeherJacksonNedialkov.tex 2071 2020-06-11 11:32:06Z lf1agure $
+%%% Alexander Weber, 2017
+%%%
+%%% Part of Alexander Weber's language definition [Weber17b]
+%%%
+%%% BibTeX keys coincide with Gunther Reissig's BibTeX database, but
+%%% list of references is currently hard coded in the file
+%%% Weber17b.bbl
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}
+\begin{verbatim}
+Real h = 0.1;
+Interval A = [-0.05,0.05];
+Interval B;
+B = A;
+f: (u,v) in (Real,Real) to (y1,y2)
+{
+     y1 = v;
+     y2 = u^2;
+}
+psi: (t,a,b) in ([0,h],A,B) to u
+{
+     diff((u,v),t) = f(u,v);
+     initialvalue(u,1+a);
+     initialvalue(v,-1+b);
+}
+\end{verbatim}
+\caption{\label{fig:2}A program, which is motivated by \cite[Eq. (4.2)]{NeherJacksonNedialkov07}, representing $\psi\colon [0,h] \times A \times B \to \mathbb{R}$ defined by the analogon to \ref{e:psi} for the case \ref{e:ode:2}, where $h=0.1$, $A = B = \intcc{-0.05,0.05}$, $f\colon \mathbb{R} \times \mathbb{R} \to \mathbb{R} \times \mathbb{R}$, $(u,v) \mapsto (v, u^2)$, $J = \{1\}$, and $g \colon A \times B \to \mathbb{R} \times \mathbb{R}$, $(a,b) \mapsto (1+a,-1+b)$.}
+\end{figure}

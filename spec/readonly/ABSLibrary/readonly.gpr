@@ -1,0 +1,14 @@
+with "../../ABSLibrary.gpr";
+limited with "../../readwrite/ABSLibrary/readwrite.gpr";
+limited with "../../hidden/ABSLibrary/hidden.gpr";
+
+project readonly is
+ for Languages use ("ada");
+
+ for Object_Dir use "../../../obj/readonly/ABSLibrary/" & ABSLibrary.os & "/" & ABSLibrary.mode ;
+ for Source_Dirs use ("./**","../../../body/readonly/ABSLibrary/**");
+
+ package Compiler renames ABSLibrary.Compiler;
+ package Linker renames ABSLibrary.Linker;
+
+end readonly;	

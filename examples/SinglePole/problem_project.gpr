@@ -1,0 +1,54 @@
+with "../../spec/ABSLibrary.gpr";
+project problem_project is
+
+ SOFTWAREDIR := "../..";
+ SOFTWAREDIR_REL_TO_OBJ := "../../../../..";
+
+ GMP  := ABSLibrary.GMP;
+ MPFR := ABSLibrary.MPFR;
+ MPFI := ABSLibrary.MPFI;
+
+
+ for Languages use ("ada","C");
+ for Object_Dir use "./obj/" & ABSLibrary.os & "/" & ABSLibrary.mode ;
+ for Exec_Dir use "./bin/" & ABSLibrary.os & "/" & ABSLibrary.mode ;
+ for Source_Dirs use ("./SourceCodeFiles/", SOFTWAREDIR & "/body/readwrite/ABSLibrary/**", SOFTWAREDIR & "/body/readonly/ABSLibrary/**", SOFTWAREDIR & "/spec/readwrite/ABSLibrary/**", SOFTWAREDIR & "/spec/readonly/ABSLibrary/**");
+ for Source_Files use (
+ "dynamics_specification_parameters.adb",
+ "Jacobian.c",
+ "Jacobian.h",
+ "Function_ia.c",
+ "Function_ia.h",
+ "Remainder.c",
+ "Remainder.h",
+ "main.adb"
+ );
+ for Main use("main.adb") ;
+ 
+ package Compiler is
+  case ABSLibrary.Mode is
+  when "debug" => 
+  for Switches ("ada") use ABSLibrary.Compiler'Switches ("ada");
+  for Switches ("C") use ("-g", "-Wall", "-std=c99",
+                                  "-I" & SOFTWAREDIR_REL_TO_OBJ & "/spec/readwrite/ProblemCompiler/misc", 
+                                  "-I" & SOFTWAREDIR_REL_TO_OBJ & "/libs/" & MPFI & "/src", 
+                                  "-I" & SOFTWAREDIR_REL_TO_OBJ & "/libs/" & MPFR & "/src", 
+                                  "-I" & SOFTWAREDIR_REL_TO_OBJ & "/libs/" & GMP);
+  when "release" =>
+   for Switches ("ada") use ABSLibrary.Compiler'Switches ("ada");
+   for Switches ("C") use ("-O2", "-Wall", "-std=c99",
+                                  "-I" & SOFTWAREDIR_REL_TO_OBJ & "/spec/readwrite/ProblemCompiler/misc", 
+                                   "-I" & SOFTWAREDIR_REL_TO_OBJ & "/libs/" & MPFI & "/src", 
+                                   "-I" & SOFTWAREDIR_REL_TO_OBJ & "/libs/" & MPFR & "/src", 
+                                   "-I" & SOFTWAREDIR_REL_TO_OBJ & "/libs/" & GMP);
+  end case;
+ end Compiler;
+
+ package Linker is 
+  for Switches ("ada") use ("-Wl,-Bstatic", "-L" & SOFTWAREDIR & "/libs/" & MPFI & "/src/.libs", "-lmpfi",
+                            "-L" & SOFTWAREDIR & "/libs/" & MPFR & "/src/.libs", "-lmpfr",
+                            "-L" & SOFTWAREDIR & "/libs/" & GMP  & "/.libs", "-lgmp", 
+                            "-Wl,-Bdynamic", "-lm");
+ end Linker;
+
+end problem_project;

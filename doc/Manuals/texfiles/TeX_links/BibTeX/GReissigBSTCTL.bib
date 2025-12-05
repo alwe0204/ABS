@@ -1,0 +1,64 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% $LastChangedDate: 2022-04-04 17:01:50 +0200 (Mo, 04 Apr 2022) $ (local)
+%%% $LastChangedRevision: 2623 $
+%%% $LastChangedBy: lf1agure $
+%%% $Id: GReissigBSTCTL.bib 2623 2022-04-04 15:01:50Z lf1agure $
+%%%
+%%% Gunther Reissig, 2013-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% This file provides functionality to adjust parameters in BibTeX
+% style files, using the approach from IEEEtran.bst and the command
+% \bstctlcite. This currently works with the following BibTeX styles:
+%   GReissigIEEEtran (all keys)
+%   IEEEtran         (only keys starting with `IEEEtranBSTCTL')
+%   GReissigUnsrtabb (only keys starting with `GReissigBSTCTL')
+%   GReissigAlphaabb (only keys starting with `GReissigBSTCTL')
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Use:
+% ====
+% 1. Activate functionalty of this file:
+% After \bibliographystyle{<one of the abovementioned BibTeX styles>}:
+% use `GReissigBSTCTL' as the first argument to \bibliography{...}
+%
+% 2. Adjust parameters of BibTeX styles:
+% * Use \bstctlcite{<key>} in main.tex between \begin{document} and
+%   \end{document}. Example: \bstctlcite{IEEEtranBSTCTL_AuthorNoDash}
+% * Parameter will be adjusted immediately following the command
+%   \bstctlcite. You can adjust a paramater multiple times; usefulness
+%   of that feature questionable.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% Implemented keys for user adustable controls and their effects:
+% ===============================================================
+
+% control: CTLdash_repeated_names; keys:
+% * IEEEtranBSTCTL_AuthorDash (default): author data repeated in
+%   in successive entries in list of references is replaced by
+%   `------'.
+% * IEEEtranBSTCTL_AuthorDash: no replacement
+@IEEEtranBSTCTL{IEEEtranBSTCTL_AuthorNoDash,
+  CTLdash_repeated_names = "no"
+}
+@IEEEtranBSTCTL{IEEEtranBSTCTL_AuthorDash,
+  CTLdash_repeated_names = "yes"
+}
+
+% control: CTLuse_url; keys:
+% * GReissigBSTCTL_UseURL (default): use fields doi, eprint, url
+% * GReissigBSTCTL_DontUseURL: don't use these fields
+@IEEEtranBSTCTL{GReissigBSTCTL_UseURL, CTLuse_url = "yes" }
+@IEEEtranBSTCTL{GReissigBSTCTL_DontUseURL, CTLuse_url = "no" }
+
+% control: CTLname_url_prefix; keys:
+% * GReissigBSTCTL_NoURLPrefix: do not use url prefix
+@IEEEtranBSTCTL{GReissigBSTCTL_NoURLPrefix, CTLname_url_prefix = "" }
+
+% control: CTLuse_award; keys:
+% * GReissigBSTCTL_UseAward: use field award
+% * GReissigBSTCTL_DontUseAward (default): don't use that field
+@IEEEtranBSTCTL{GReissigBSTCTL_UseAward, CTLuse_award = "yes" }
+@IEEEtranBSTCTL{GReissigBSTCTL_DontUseAward, CTLuse_award = "no" }

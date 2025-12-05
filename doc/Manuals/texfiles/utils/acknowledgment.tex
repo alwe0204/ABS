@@ -1,0 +1,35 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% $LastChangedDate: 2022-04-04 16:08:53 +0200 (Mo, 04 Apr 2022) $ (local)
+%%% $LastChangedRevision: 2619 $
+%%% $LastChangedBy: lf1agure $
+%%% $Id: acknowledgment.tex 2619 2022-04-04 14:08:53Z lf1agure $
+%%%
+%%% created by G Reissig, Apr 2017
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% basic macros providing text containing acknowledgements
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage{GReissigGeneral}% loads package svn-multi
+\svnid{$Id: acknowledgment.tex 2619 2022-04-04 14:08:53Z lf1agure $}
+
+% globally define the following macros:
+% \AcknowledgmentText
+%
+\def\AcknowledgmentText{%
+\ProjectAcronym{} is developed and maintained by the
+group of \ProjectAdministrator{} at the \ProjectHostInstitution{}.
+It is based on software created between 2013 and 2017 by
+\ProjectInitialProgrammers{}.\\[1ex]
+The following persons have substantially contributed to the
+development of \ProjectAcronym{}:
+\ProjectProgrammers.\\[1ex]
+\ifx\ProjectExternalContributors\undefined\else
+The following persons have contributed to the improvement of
+\ProjectAcronym{} by providing substantial user feedback, advice,
+bug reports and the like:
+\ProjectExternalContributors.\\[1ex]
+\fi
+The following sponsors have supported the development, maintenance and
+provision of \ProjectAcronym:
+\Sponsors.
+}

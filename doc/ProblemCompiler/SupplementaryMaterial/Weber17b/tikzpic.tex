@@ -1,0 +1,26 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% $Id: tikzpic.tex 2071 2020-06-11 11:32:06Z lf1agure $
+%%% Alexander Weber, 2017
+%%%
+%%% Part of Alexander Weber's language definition [Weber17b]
+%%%
+%%% BibTeX keys coincide with Gunther Reissig's BibTeX database, but
+%%% list of references is currently hard coded in the file
+%%% Weber17b.bbl
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{center}
+\begin{tikzpicture}[>=latex']
+\draw[->] (0,0) -- (0,-2.5) {};
+\node[] at (.6,-2.) {$\mathcal{I}_3\llbracket a_3 \rrbracket$};
+\node[] at (-1.9,-.3) {$\mathcal{I}_2 \llbracket a_2 \rrbracket \circ \mathcal{I}_1 \llbracket a_1 \rrbracket $};
+\draw[->] (0,0) -- (-1.,-1) {};
+\draw[-] (-0.7,-1.3) -- (0,-1.5);
+\node[] at (-1.2,-1.2) {$\sigma_\mathrm{dom}$};
+\node[] at (0.,0.2) {$\sigma$};
+\draw[-] (-1.2,-1.4) -- (-1.2,-2.5);
+\draw[thick] (.2,0.2) -| (1.5,-2.8);
+\draw[thick,->] (1.5,-2.8) -- (0.7,-2.8);
+\node[] at (2.6,-1.3) {$\mathcal{I}\llbracket a_1 \ a_2 \ a_3 \rrbracket$};
+\node[] at (-.6,-2.8) {$(\sigma_\mathrm{dom} \ , \ \sigma_\mathrm{final})$};
+\end{tikzpicture}
+\end{center}

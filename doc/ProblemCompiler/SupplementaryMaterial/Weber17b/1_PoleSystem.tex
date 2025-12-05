@@ -1,0 +1,30 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% $Id: 1_PoleSystem.tex 2071 2020-06-11 11:32:06Z lf1agure $
+%%% Alexander Weber, 2017
+%%%
+%%% Part of Alexander Weber's language definition [Weber17b]
+%%%
+%%% BibTeX keys coincide with Gunther Reissig's BibTeX database, but
+%%% list of references is currently hard coded in the file
+%%% Weber17b.bbl
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}
+\begin{verbatim}
+Interval X0[2];
+X0[0] = [0,2*Pi];
+X0[1] = [-1,1];
+Interval U = [-2,2];
+Real gamma in [0,0.1];
+f: (x,u) in (Real[2],U) to y[2]
+{
+     y[0] = x[1];
+     y[1] = -sin(x[0])-u*cos(x[0])-2*gamma*x[1];
+}
+phi: (t,x0,u) in ([0,1],X0,U) to x[2]
+{
+     diff(x,t) = f(x,u);
+     initialvalue(x,x0);
+}
+\end{verbatim}
+\caption{\label{fig:1} A program representing a solution of \ref{e:ode} on $(\intcc{0,1},\intcc{0,2\pi} \times \intcc{-1,1},\intcc{-2,2})$, where $f \colon \mathbb{R}^2 \times \intcc{-2,2} \to \mathbb{R}^2$, $(x,u) \mapsto (x_2,-\sin(x_1)-u \cos(x_1)-2\gamma x_2)$, $\gamma \in \intcc{0,0.1}$. }
+\end{figure}

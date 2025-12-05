@@ -1,0 +1,4 @@
+f : x in [-Pi,Pi] to y
+{
+ y = atan(x);
+}

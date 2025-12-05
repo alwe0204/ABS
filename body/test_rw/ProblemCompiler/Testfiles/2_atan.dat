@@ -1,0 +1,14 @@
+Interval X;
+X = [-Pi/4,Pi/4];
+f: x in X to y
+{
+	Real z;
+	z = x*x+1;
+	y = z + atan(x);
+}
+phi: (t,x) in ([0,.1],X) to z
+{
+	initialvalue(z,x);
+	diff(z,t) = f(z);
+}
+

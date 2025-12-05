@@ -1,0 +1,13 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% $Id: Weber17b.HowTo.txt 2072 2020-06-11 12:10:32Z lf1agure $
+%%% Alexander Weber, 2017
+%%%
+%%% Information on how to produce Alexander Weber's language definition
+%%% [Weber17b]
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+To generate Weber17b.pdf run the skript MakePdfFromYacc.sh
+
+Note that the grammar specified in lex.l and parse.y DOES NOT coincide with the grammar of the ABS software (as of May, 2017)
+
+(A. Weber)

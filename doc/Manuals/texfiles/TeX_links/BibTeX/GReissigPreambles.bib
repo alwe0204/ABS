@@ -1,0 +1,32 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% $LastChangedDate: 2022-04-04 17:01:50 +0200 (Mo, 04 Apr 2022) $ (local)
+%%% $LastChangedRevision: 2623 $
+%%% $LastChangedBy: lf1agure $
+%%% $Id: GReissigPreambles.bib 2623 2022-04-04 15:01:50Z lf1agure $
+%%%
+%%% Gunther Reissig, 2013-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+@preamble{
+   "\def\ocirc#1{\ifmmode\setbox0=\hbox{$#1$}\dimen0=\ht0
+    \advance\dimen0 by1pt\rlap{\hbox to\wd0{\hss\raise\dimen0
+    \hbox{\hskip.2em$\scriptscriptstyle\circ$}\hss}}#1\else
+    {\accent"17 #1}\fi} "
+}
+@preamble{
+   "\def\cprime{$'$} "
+}
+@preamble{
+   "\ifx\hyperbaseurl\undefined
+    \def\href#1#2{#2}
+    \fi "
+}
+@preamble{
+   "\ifx\url\undefined
+    \def\url#1{\texttt{#1}}
+    \fi "
+}
+@preamble{
+   "\ifx\ExplicitURLsInBibTeX\undefined\relax\else
+    \def\href#1#2{www.reiszig.de/gunther/#1}\def\url#1{\texttt{#1}}
+    \fi "
+}

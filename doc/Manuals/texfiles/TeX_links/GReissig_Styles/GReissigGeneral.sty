@@ -1,0 +1,86 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% $LastChangedDate: 2022-04-01 17:57:26 +0200 (Fr, 01 Apr 2022) $ (local)
+%%% $LastChangedRevision: 2612 $
+%%% $LastChangedBy: lf1agure $
+%%% $Id: GReissigGeneral.sty 2612 2022-04-01 15:57:26Z lf1agure $
+%%%
+%%% Gunther Reissig, 2020-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Preliminaries %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\RequirePackage{GReissigPrepare}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% provide svn accounting: %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% activate: svn propset svn:keywords "Date Author Id Rev URL Header" <file>
+
+% load package svn-multi unless ACM document class:
+\ifACMclass
+\else
+\RequirePackage[filehooks]{svn-multi}
+% open: how to include graphics files in this business w/o using the
+% perl script provided w/ svn-multi?
+\fi
+
+% \href can still be used even if hyperref.sty not loaded:
+\ifx
+\hypersetup\undefined\def\href#1#2{\texttt{#2}}\def\url#1{\texttt{#1}}
+\fi
+
+%%% provide paper format information in dvi file:
+% later option clash if geometry package is used to adjust text format
+% \RequirePackage[dvips]{geometry}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% facilitate using last value of counters %%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% modified from a solution found on the web (3 Jul 2012, cgnieder,
+% https://latex.org/forum/viewtopic.php?t=20826 )
+%
+% this command gets written in the aux file:
+\def\lastCounterValue#1#2{\expandafter\xdef\csname l@#1@value\endcsname{#2}}
+% this is the user command to save the last value:
+\def\saveLastValue#1{%
+  \AtEndDocument{\write\@auxout{\string\lastCounterValue{#1}{\arabic{#1}}}}}
+% this is the user command to retrieve the last value:
+\def\getLastValue#1{%
+  \@ifundefined{l@#1@value}%
+    {??}{\@nameuse{l@#1@value}}}
+% this will issue a latex warning to rerun when one of the last values has changed:
+\AtEndDocument{
+  \def\lastCounterValue#1#2{%
+    \def\reserved@a{#2}%
+    \expandafter\ifx\csname l@#1@value\endcsname\reserved@a
+    \else\@tempswatrue\fi}
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% test if argument is an integer, and related %%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% usage: \ifDecimalInteger{arg}{true}{false}, etc
+% code adapted from
+% https://texfaq.org/FAQ-isitanum
+% https://tex.stackexchange.com/questions/50111/how-to-check-if-the-value-of-a-parameter-is-a-number
+% Direct use of package xstring is not advisable, firstly because it
+% is not fully correct (i.e., a blank string is an integer), and also
+% because it is not, as of Mar 2022, on ACM's list of compatible
+% packages; see
+% https://authors.acm.org/proceedings/production-information/accepted-latex-packages
+%\def\GReissig@gobbleminus#1{\ifx-#1\else#1\fi}
+\def\GReissig@gobbleplus#1{\ifx+#1\else#1\fi}
+\def\GReissig@gobblesign#1{\ifx-#1\else\ifx+#1\else#1\fi\fi}
+
+% decimal integer := non-empty sequence of digits 0-9, possibly
+%      preceded by one of the characters `+' or '-'
+\def\ifDecimalInteger#1{%
+\ifcat_\ifnum9<1\GReissig@gobblesign{#1} _\else A\fi%
+\expandafter\@firstoftwo \else \expandafter\@secondoftwo \fi%
+}
+% positive decimal integer := a decimal integer not containing the
+%      character `-' and containing one digit different from `0'
+\def\ifDecimalIntegerPositive#1{%
+\ifcat _\ifnum\z@<0\GReissig@gobbleplus{#1} _\else A\fi%
+\expandafter\@firstoftwo \else \expandafter\@secondoftwo \fi%
+}

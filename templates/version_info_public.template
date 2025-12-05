@@ -1,0 +1,24 @@
+23
+%  1 % version_info_public.txt
+%  2 %
+%  3 % Do not change, do not commit into repository !
+%  4 % This is an automatically generated file; its contents is to be
+%  5 % used in the documentation.
+%  6 %
+%  7 % created by G Reissig, Apr 2017
+%  8 %
+%  9 % version information, see programmer's manual
+% 10 %
+% 11 % $Id: version_info_public.template 1119 2017-05-10 15:28:21Z lf1agure $
+% 12 % ---------------------------------------------------------------
+% 13 % Structure of this file:
+% 14 % - line 1: NOC = number of comment lines
+% 15 % - the following NOC lines: comments
+% 16 % - line 1 following comments: version main name, i.e., part of
+% 17 %   version name preceding the '.'
+% 18 % - line 2 following comments: date and time when most recent
+% 19 %   changes to this version have been committed into repository;
+% 20 %   in xml format with 'T' substituted by '/'
+% 21 %
+% 22 %
+% 23 % ---------------------------------------------------------------

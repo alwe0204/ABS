@@ -1,0 +1,43 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% $LastChangedDate: 2022-03-31 17:24:15 +0200 (Do, 31 Mär 2022) $ (local)
+%%% $LastChangedRevision: 2600 $
+%%% $LastChangedBy: lf1agure $
+%%% $Id: GReissigBibtex.sty 2600 2022-03-31 15:24:15Z lf1agure $
+%%%
+%%% Gunther Reissig, 2003-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% This file sets the user adjustable parameters of certain BibTeX
+% styles to values preferred by G Reissig - Use ONLY in connection
+% with BibTeX style files listed in GReissigBSTCTL.bib !!
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Define \bstctlcite if not yet defined; needed for classes other than
+% IEEEtran.cls and ieeecolor.cls:
+\ifx\bstctlcite\undefined
+% From IEEEtran.cls:
+% Provide support for the control entries of IEEEtran.bst V1.00 and later.
+% V1.7 optional argument allows for a different aux file to be specified in
+% order to handle multiple bibliographies. For example, with multibib.sty:
+% \newcites{sec}{Secondary Literature}
+% \bstctlcite[@auxoutsec]{BSTcontrolhak}
+\def\bstctlcite{\@ifnextchar[{\@bstctlcite}{\@bstctlcite[@auxout]}}
+\def\@bstctlcite[#1]#2{\@bsphack
+  \@for\@citeb:=#2\do{%
+    \edef\@citeb{\expandafter\@firstofone\@citeb}%
+    \if@filesw\immediate\write\csname #1\endcsname{\string\citation{\@citeb}}\fi}%
+  \@esphack}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Set default values for the use of adjustable parameters of certain
+% BibTeX styles at begin of document:
+%
+\AtBeginDocument{%
+\bstctlcite{%
+IEEEtranBSTCTL_AuthorNoDash,%
+GReissigBSTCTL_UseURL,GReissigBSTCTL_NoURLPrefix,%
+GReissigBSTCTL_DontUseAward%
+}%
+}

@@ -1,0 +1,5 @@
+Real a = 1.0E-15;
+f : x in [-Pi/2+a,Pi/2-a] to y
+{
+ y = tan(x);
+}

@@ -1,0 +1,46 @@
+/* === SinglePole.abcs ============================================ */
+/*                                                                  */
+/* created by Alexander Weber, Feb 2017                             */
+/* $Id: SinglePole.abcs 2094 2020-07-27 05:46:26Z lf3eelma $        */
+/*                                                                  */
+/* which problem, from which paper, etc?                            */
+/* ================================================================ */
+
+/* to do:
+  - `make newproblem` should use template file rather than just creating an empty file
+  - code that permits using the svn info in, e.g. log files
+*/
+
+/* Friction coefficient gamma is uncertain and assumed to be
+   within the specified range */
+Real gamma in [0.0125,0.0126];
+
+/* The right hand side of the continuous-time dynamics 
+   of the single poly system */
+f: (x,u) in (Real[2],[-2,2]) to y[2]
+{
+	y[0] = x[1];
+	y[1] = -sin(x[0])-cos(x[0])*u-2*gamma*x[1];
+}
+
+/* Sampling time */
+SamplingTime : 0.3;
+/* Subset of state space covered by real quantizer symbols */
+OperatingRange: ([0,2*Pi],[-2,2]);
+/* Left and right end point of first component (index 0) of 
+   previous set can be identified */
+ListOfPeriodicComponents : (0);
+/* Reach-avoid problem data */
+InitialSet : ([0,0],[0,0]);
+TargetSet : ([Pi-.1,Pi+.1],[-.1,.1]);
+/* Subdivisions to use to obtain the initial cell cover */
+InitialStateSpaceDiscretization : (200,200);
+/* Subdivisions to use to obtain the input values */
+InitialInputSpaceDiscretization : (5);
+/* Order of the Taylor polynomial that approximates
+   the general solution of the right hand side */
+IntegrationOrder : 5 ; 
+/* Order of the Taylor polynomial that approximates
+   the growth bound formula */
+IntegrationOrderGrowthBound : 15;
+

@@ -1,0 +1,35 @@
+#!/bin/bash
+######################################################################
+### $LastChangedDate: 2022-04-07 18:14:16 +0200 (Do, 07 Apr 2022) $ (local)
+### $LastChangedRevision: 2630 $
+### $LastChangedBy: lf1agure $
+### $Id: create_readonly_paths_file 2630 2022-04-07 16:14:16Z lf1agure $
+###
+### created by G Reissig, May 2017-
+######################################################################
+#
+# script to create information on stdout
+# which is to be written into admin/readonly_paths_file.tex
+#
+# requires the following files:
+# * readonly_paths_file.tex in same directory as this script
+# * copy of
+#   applxsrv.rz.unibw-muenchen.de:/home/subversion/lf1agure/svn-access
+#   full path name should be given as an argument to the present script
+######################################################################
+
+READONLYPATH_FILE="readonly_paths_file.tex"
+SEARCH_STRING="@ABSprogrammers=r"
+
+# write header:
+/bin/egrep --after-context=2 "%%" $READONLYPATH_FILE
+
+# write actual information:
+/bin/echo -n "%"
+/bin/egrep --before-context=4 --line-regexp $SEARCH_STRING $1 \
+ |grep -v "\-\-"|grep -v $SEARCH_STRING \
+ |sed 's/^\[lf1agure:\/ABS\/\(.*\)\]$/\\\\\n\\nolinkurl{\1\/} \&\&\&/' \
+ |sed 's/^#[[:space:]]*\(.*\)$/\1/' \
+ |grep -v --line-regexp ""
+/bin/echo "}"
+exit 0

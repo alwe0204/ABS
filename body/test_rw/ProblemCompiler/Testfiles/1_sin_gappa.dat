@@ -1,0 +1,4 @@
+f : x in [-2*Pi,2*Pi] to y
+{
+ y = sin(x);
+}

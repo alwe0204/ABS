@@ -1,0 +1,41 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% $LastChangedDate: 2022-04-07 18:14:16 +0200 (Do, 07 Apr 2022) $ (local)
+%%% $LastChangedRevision: 2630 $
+%%% $LastChangedBy: lf1agure $
+%%% $Id: credits.tex 2630 2022-04-07 16:14:16Z lf1agure $
+%%%
+%%% created by G Reissig, Apr 2017
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% basic macros providing information about contributors, sponsors and
+% the like
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\RequirePackage{GReissigGeneral}% loads package svn-multi
+\svnid{$Id: credits.tex 2630 2022-04-07 16:14:16Z lf1agure $}
+
+% globally define the following macros:
+%
+% initial version of software and documentation:
+\def\ProjectInitialProgrammers{Alexander Weber}
+% internal contributors (programmers):
+\def\ProjectProgrammers{\ProjectInitialProgrammers,
+Gunther Reissig,
+Hao Zhou,
+Elisei Macoveiciuc}
+% external contributors (e.g. bug descriptions etc):
+%\def\ProjectExternalContributors{}
+% sponsors/funding agencies:
+\def\Sponsors{%
+\href{http://www.dfg.de}{Deutsche Forschungsgemeinschaft} (DFG)
+under grants no. RE 1249/3-1, RE 1249/3-2, and RE 1249/4-1;
+\href{http://www.munich-aerospace.de}{Munich Aerospace};
+and
+\href{http://www.adacore.com}{AdaCore}%
+}
+% Footnote to be set on titlepage:
+\def\ProjectAdministratorsFootnoteText{%
+Initiator and administrator of project,
+\ProjectAdministratorsAffiliation, \nolinkurl{\ProjectAdministratorsWWW}
+\newline
+This work has been supported by the following sponsors: \Sponsors.
+}
+

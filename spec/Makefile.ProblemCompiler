@@ -1,0 +1,208 @@
+# #################################################################
+# Makefile for the compiler                                       #
+# May 9, 2017                                                     #
+# A. Weber (a.weber@unibw.de)                                     #
+# #################################################################
+
+CC      = /usr/bin/gcc
+DEBUG ?= 1
+
+ifeq ($(DEBUG),1)
+GCCFLAG = -Wall -std=c99 -g
+COMPILINGMODE = debug
+else
+GCCFLAG = -Wall -std=c99 -O2
+COMPILINGMODE = release
+endif
+
+DEPENDENCYFILE = .dep$(COMPILINGMODE)
+TESTSDEPENDENCYFILE = .testdep$(COMPILINGMODE)
+
+BINNAME = compiler
+
+GMP  = gmp-6.1.2
+MPFR = mpfr-3.1.5
+MPFI = mpfi-1.5.1
+
+TARGET := $(shell $(CC) -dumpmachine)
+
+
+HEADERDIR  = ./readwrite/ProblemCompiler
+SRCDIR = ../body/readwrite/ProblemCompiler
+TESTDIR = ../body/test_rw/ProblemCompiler
+
+OBJDIR  = ../obj/readwrite/ProblemCompiler/$(TARGET)/$(COMPILINGMODE)
+OBJTESTDIR  = ../obj/test_rw/ProblemCompiler/$(TARGET)/$(COMPILINGMODE)
+BINDIR  = ../bin/$(TARGET)/$(COMPILINGMODE)
+
+LIBDIR = ../libs
+
+INCDIR  = -I$(HEADERDIR)/
+INCDIR += -I$(HEADERDIR)/parser/ 
+INCDIR += -I$(HEADERDIR)/utils/
+INCDIR += -I$(HEADERDIR)/semantics/ 
+INCDIR += -I$(HEADERDIR)/ad/ 
+INCDIR += -I$(HEADERDIR)/backends/
+INCDIR += -I$(HEADERDIR)/calc/
+
+INCDIR += -I$(LIBDIR)/$(GMP)/
+INCDIR += -I$(LIBDIR)/$(MPFR)/src/
+INCDIR += -I$(LIBDIR)/$(MPFI)/src/
+
+src = $(SRCDIR)/parser/ast.c 
+src += $(SRCDIR)/semantics/semantics.c
+src += $(SRCDIR)/semantics/semantics_abcs.c
+src += $(SRCDIR)/semantics/variables.c
+src += $(SRCDIR)/semantics/reduce_int.c
+src += $(SRCDIR)/semantics/expressions.c
+src += $(SRCDIR)/semantics/ia.c
+src += $(SRCDIR)/ad/ad.c
+src += $(SRCDIR)/backends/output.c
+src += $(SRCDIR)/backends/output_aux.c
+src += $(SRCDIR)/backends/output_to_c.c
+src += $(SRCDIR)/backends/output_to_ada.c
+src += $(SRCDIR)/backends/output_to_mma.c
+src += $(SRCDIR)/backends/to_string.c
+src += $(SRCDIR)/backends/abcs.c
+src += $(SRCDIR)/calc/calc_abcs.c
+src += $(SRCDIR)/calc/gappa_abcs.c
+src += $(SRCDIR)/calc/gappa_utils.c
+src += $(SRCDIR)/calc/gappa.c
+src += $(SRCDIR)/utils/lists.c
+src += $(SRCDIR)/utils/my_strcat.c
+src += $(SRCDIR)/task.c
+src += $(SRCDIR)/main.c
+
+obj = $(addprefix $(OBJDIR)/,$(notdir $(src:.c=.o)))
+
+srctest = $(TESTDIR)/test_differentiation.c
+srctest += $(TESTDIR)/test_evaluate_remainder_ia.c
+srctest += $(TESTDIR)/test_gappa.c
+
+objtest = $(addprefix $(OBJTESTDIR)/,$(notdir $(srctest:.c=.o)))
+
+.PHONY: $(DEPENDENCYFILE) $(TESTSDEPENDENCYFILE) all
+
+all: $(DEPENDENCYFILE) $(TESTSDEPENDENCYFILE) $(BINDIR)/$(BINNAME) $(BINDIR)/test_differentiation $(BINDIR)/test_evaluate_remainder_ia $(BINDIR)/test_gappa
+
+$(DEPENDENCYFILE):
+	@$(CC) -MM $(INCDIR) $(src)  > $(DEPENDENCYFILE) ; \
+	sed -i 's|.*:|$(OBJDIR)/&|' $(DEPENDENCYFILE) ; 
+
+$(TESTSDEPENDENCYFILE):
+	@$(CC) -MM $(INCDIR) $(srctest) > $(TESTSDEPENDENCYFILE) ; \
+	sed -i 's|.*:|$(OBJTESTDIR)/&|' $(TESTSDEPENDENCYFILE) ;
+
+-include $(DEPENDENCYFILE)
+-include $(TESTSDEPENDENCYFILE)
+
+
+$(BINDIR)/$(BINNAME): $(obj) $(OBJDIR)/lex.yy.o $(OBJDIR)/y.tab.o
+	$(CC) -Wall -o $(BINDIR)/$(BINNAME) $(obj) $(OBJDIR)/lex.yy.o $(OBJDIR)/y.tab.o -lfl -Wl,-Bstatic -L$(LIBDIR)/$(MPFI)/src/.libs -lmpfi -L$(LIBDIR)/$(MPFR)/src/.libs -lmpfr -L$(LIBDIR)/$(GMP)/.libs -lgmp -Wl,-Bdynamic -lm 
+
+$(SRCDIR)/parser/lex.yy.c: $(SRCDIR)/parser/lex.l
+	flex --outfile=$(SRCDIR)/parser/lex.yy.c $(SRCDIR)/parser/lex.l 
+
+$(SRCDIR)/parser/y.tab.c: $(SRCDIR)/parser/parse.y
+	bison -y -d -o $(SRCDIR)/parser/y.tab.c  $(SRCDIR)/parser/parse.y 
+
+
+$(OBJDIR)/lex.yy.o: $(SRCDIR)/parser/lex.yy.c $(SRCDIR)/parser/y.tab.c
+	$(CC) -c $(INCDIR) $(SRCDIR)/parser/lex.yy.c -o $(OBJDIR)/lex.yy.o
+
+$(OBJDIR)/y.tab.o: $(SRCDIR)/parser/y.tab.c $(SRCDIR)/parser/lex.yy.c
+	$(CC) -c $(INCDIR) $(SRCDIR)/parser/y.tab.c -lm -lfl -o $(OBJDIR)/y.tab.o
+
+$(OBJDIR)/abcs.o: 
+	$(CC) $(GCCFLAG) -c $(INCDIR) $(SRCDIR)/backends/abcs.c -o $@
+
+$(OBJDIR)/ad.o:
+	$(CC) $(GCCFLAG) -c $(INCDIR) $(SRCDIR)/ad/ad.c -o $@
+
+$(OBJDIR)/ast.o: 
+	$(CC) $(GCCFLAG) -c $(INCDIR) $(SRCDIR)/parser/ast.c -o $@
+
+$(OBJDIR)/calc_abcs.o: 
+	$(CC) $(GCCFLAG) -c $(INCDIR) $(SRCDIR)/calc/calc_abcs.c -o $@
+
+$(OBJDIR)/expressions.o:
+	$(CC) $(GCCFLAG) -c $(INCDIR) $(SRCDIR)/semantics/expressions.c -o $@
+
+$(OBJDIR)/gappa.o: 
+	$(CC) $(GCCFLAG) -c $(INCDIR) $(SRCDIR)/calc/gappa.c -o $@
+
+$(OBJDIR)/gappa_abcs.o: 
+	$(CC) $(GCCFLAG) -c $(INCDIR) $(SRCDIR)/calc/gappa_abcs.c -o $@
+
+$(OBJDIR)/gappa_utils.o: 
+	$(CC) $(GCCFLAG) -c $(INCDIR) $(SRCDIR)/calc/gappa_utils.c -o $@
+
+$(OBJDIR)/ia.o:
+	$(CC) $(GCCFLAG) -c $(INCDIR) $(SRCDIR)/semantics/ia.c -o $@
+
+$(OBJDIR)/lists.o:
+	$(CC) $(GCCFLAG) -c $(INCDIR) $(SRCDIR)/utils/lists.c -o $@
+
+$(OBJDIR)/output.o:
+	$(CC) $(GCCFLAG) -c $(INCDIR) $(SRCDIR)/backends/output.c -o $@
+
+$(OBJDIR)/output_to_c.o:
+	$(CC) $(GCCFLAG) -c $(INCDIR) $(SRCDIR)/backends/output_to_c.c -o $@
+
+$(OBJDIR)/output_to_ada.o:
+	$(CC) $(GCCFLAG) -c $(INCDIR) $(SRCDIR)/backends/output_to_ada.c -o $@
+
+$(OBJDIR)/output_to_mma.o:
+	$(CC) $(GCCFLAG) -c $(INCDIR) $(SRCDIR)/backends/output_to_mma.c -o $@
+
+$(OBJDIR)/output_aux.o:
+	$(CC) $(GCCFLAG) -c $(INCDIR) $(SRCDIR)/backends/output_aux.c -o $@
+
+$(OBJDIR)/my_strcat.o:
+	$(CC) $(GCCFLAG) -c $(INCDIR) $(SRCDIR)/utils/my_strcat.c -o $@
+
+$(OBJDIR)/reduce_int.o:
+	$(CC) $(GCCFLAG) -c $(INCDIR) $(SRCDIR)/semantics/reduce_int.c -o $@
+
+$(OBJDIR)/task.o: 
+	$(CC) $(GCCFLAG) -c $(INCDIR) $(SRCDIR)/task.c -o $@
+
+$(OBJDIR)/to_string.o:
+	$(CC) $(GCCFLAG) -c $(INCDIR) $(SRCDIR)/backends/to_string.c -o $@
+ 
+$(OBJDIR)/variables.o:
+	$(CC) $(GCCFLAG) -c $(INCDIR) $(SRCDIR)/semantics/variables.c -o $@
+
+$(OBJDIR)/semantics.o:
+	$(CC) $(GCCFLAG) -c $(INCDIR) $(SRCDIR)/semantics/semantics.c -o $@
+
+$(OBJDIR)/semantics_abcs.o:
+	$(CC) $(GCCFLAG) -c $(INCDIR) $(SRCDIR)/semantics/semantics_abcs.c -o $@
+
+$(OBJDIR)/main.o: 
+	$(CC) $(GCCFLAG) -c $(INCDIR) $(SRCDIR)/main.c -o $@
+
+#Compilation of tests 
+
+$(BINDIR)/test_differentiation: $(objtest)
+	$(CC) -Wall -o $(BINDIR)/test_differentiation $(OBJTESTDIR)/test_differentiation.o
+
+$(OBJTESTDIR)/test_differentiation.o: 
+	$(CC) $(GCCFLAG) -c $(INCDIR) $(TESTDIR)/test_differentiation.c -o $@
+
+$(BINDIR)/test_evaluate_remainder_ia: $(objtest)
+	$(CC) -Wall -o $(BINDIR)/test_evaluate_remainder_ia $(OBJTESTDIR)/test_evaluate_remainder_ia.o 
+
+$(OBJTESTDIR)/test_evaluate_remainder_ia.o: 
+	$(CC) $(GCCFLAG) -c $(INCDIR) $(TESTDIR)/test_evaluate_remainder_ia.c -o $@
+
+$(OBJTESTDIR)/test_gappa.o: 
+	$(CC) $(GCCFLAG) -c $(INCDIR) $(TESTDIR)/test_gappa.c -o $@
+
+$(BINDIR)/test_gappa: $(objtest)
+	$(CC) -Wall -o $(BINDIR)/test_gappa $(OBJTESTDIR)/test_gappa.o $(OBJDIR)/gappa_utils.o $(OBJDIR)/my_strcat.o -Wl,-Bstatic -L$(LIBDIR)/$(MPFI)/src/.libs -lmpfi -L$(LIBDIR)/$(MPFR)/src/.libs -lmpfr -L$(LIBDIR)/$(GMP)/.libs -lgmp -Wl,-Bdynamic -lm 
+
+#clean
+
+clean:
+	rm -f $(DEPENDENCYFILE) $(TESTSDEPENDENCYFILE) $(BINDIR)/$(BINNAME) $(BINDIR)/test_differentiation $(BINDIR)/test_evaluate_remainder_ia $(BINDIR)/test_gappa $(SRCDIR)/parser/y.tab.c $(SRCDIR)/parser/y.tab.h $(SRCDIR)/parser/lex.yy.c $(OBJDIR)/*.o $(OBJTESTDIR)/*.o

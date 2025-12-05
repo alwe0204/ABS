@@ -1,0 +1,20 @@
+with "../../ABSLibrary.gpr";
+
+project test_rw is
+
+ for Languages use ("ada","C");
+ for Source_Dirs use ("./**","../../../body/test_rw/ABSLibrary/**");
+ for Object_Dir use "../../../obj/test_rw/ABSLibrary/" & ABSLibrary.os & "/" & ABSLibrary.mode ;
+ for Exec_Dir use "../../../bin/" & ABSLibrary.os & "/" & ABSLibrary.mode ;
+
+ -- Enter new tests below --
+ for Main use (
+  "test_abstraction_and_dijkstra.adb",
+  "test_abstraction_and_dijkstra_file.adb",
+  "test_growth_bound.adb"
+ );
+
+ package Compiler renames ABSLibrary.Compiler;
+ package Linker renames ABSLibrary.Linker;
+
+end test_rw;

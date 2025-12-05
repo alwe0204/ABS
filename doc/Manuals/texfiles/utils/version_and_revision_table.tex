@@ -1,0 +1,35 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% $LastChangedDate: 2022-04-07 18:14:16 +0200 (Do, 07 Apr 2022) $ (local)
+%%% $LastChangedRevision: 2630 $
+%%% $LastChangedBy: lf1agure $
+%%% $Id: version_and_revision_table.tex 2630 2022-04-07 16:14:16Z lf1agure $
+%%%
+%%% created by G Reissig, Apr 2017
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% basic macros providing information about current version, revision
+% and working copy
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\RequirePackage{GReissigGeneral}% loads package svn-multi
+\svnid{$Id: version_and_revision_table.tex 2630 2022-04-07 16:14:16Z lf1agure $}
+
+% globally define the following macros:
+% \VersionAndRevisionTable
+%
+\def\VersionAndRevisionTable{%
+\tabcolsep0pt%
+\begin{tabular}{lp{2pt}l}
+Version:&&
+\texttt{\VersionName}\\
+Revision:&&
+\RevisionNumberOfMostRecentChangeOfThisBranchInRepository\\
+Date:&&
+\DateAndTimeOfMostRecentChangeOfThisBranchInRepository\\
+Branch Root:&&
+\nolinkurl{\RootAddressOfThisBranchOfProjectInRepository}\\
+Working Copy:&&
+\nolinkurl{\RootDirectoryOfWorkingCopyOfThisBranch/}\\
+Revision of this document:&&
+\svnrev, \svndate
+\end{tabular}
+}

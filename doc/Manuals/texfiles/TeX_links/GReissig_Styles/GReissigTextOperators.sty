@@ -1,0 +1,26 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% $LastChangedDate: 2022-03-31 17:24:15 +0200 (Do, 31 Mär 2022) $ (local)
+%%% $LastChangedRevision: 2600 $
+%%% $LastChangedBy: lf1agure $
+%%% $Id: GReissigTextOperators.sty 2600 2022-03-31 15:24:15Z lf1agure $
+%%%
+%%% Gunther Reissig, 2003-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% symbols for use in text:
+\DeclareTextSymbol{\at}{OT1}{"40}
+
+% Emphasize Concepts:
+\def\concept#1%
+{\@nomath\begriff\ifdim\fontdimen\@ne\font>\z@%
+\textsf{#1}\else\textit{#1}\fi}
+% backwards compatibility:
+\let\begriff=\concept
+% smaller \concept{}-font in theorem environments:
+%\usepackage[scaled=.875]{helvet}
+%\RequirePackage[scaled=.85]{helvet}
+% wie machen im textsf-Fall, dasz math Formeln innerhalb begriff
+%        semibold (sb) sind?
+
+% Emphasize persons' names:
+\def\person#1{\textsc{#1}}
