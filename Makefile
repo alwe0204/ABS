@@ -497,6 +497,9 @@ endif
 #    suffer from a bug related to the option `-cd'
 manuals: $(VERSIONINFOPUBLIC) $(REPOSITORYFILESYSTEMINFO) $(VERSIONINFOPRIVATE_VERIFIED)
 	cd $(MANUALSDIR) ; \
+	export TEXINPUTS=$(TEXINPUTS) ; \
+	export BSTINPUTS=$(BSTINPUTS) ; \
+	export BIBINPUTS=$(BIBINPUTS) ; \
 	latexmk $(LATEXMK_OPTS) ; \
 	chmod 644 *.pdf ;
 
@@ -531,15 +534,14 @@ $(VERSIONINFOPRIVATE_VERIFIED): $(VERSIONINFOPRIVATE)
 .PHONY: $(REPOSITORYFILESYSTEMINFO)
 $(REPOSITORYFILESYSTEMINFO):
 	@TMP_FILE=$(shell mktemp) ; \
-	svn info --xml > $$TMP_FILE; \
-	RootAddressOfRepository=`sed -n 's:.*<root>\(.*\)</root>.*:\1:p' $$TMP_FILE` ;  \
-	RootAddressOfThisBranchOfProjectInRepository=`sed -n 's:.*<url>\(.*\)</url>.*:\1:p' $$TMP_FILE` ;  \
+	RootAddressOfRepository="https://github.com/alwe0204/ABS" ;  \
+	RootAddressOfThisBranchOfProjectInRepository="https://github.com/alwe0204/ABS" ;  \
 	RootDirectoryOfWorkingCopyOfThisBranch=$(BRANCH_ROOT) ; \
-	DateAndTimeOfMostRecentChangeOfThisBranchInRepository=`sed -n 's:.*<date>\(.*\)</date>.*:\1:p' $$TMP_FILE` ;  \
+	DateAndTimeOfMostRecentChangeOfThisBranchInRepository="1970-01-11/00:00:00.0Z" ;  \
 	DateAndTimeOfMostRecentChangeOfThisBranchInRepository=`echo "$$DateAndTimeOfMostRecentChangeOfThisBranchInRepository" | sed 's#T#/#g'` ; \
 	sed -i ':a;N;$$!ba;s/<commit\n   /<commit /g' $$TMP_FILE; \
-	RevisionNumberOfMostRecentChangeOfThisBranchInRepository=`sed -n 's:.*<commit revision="\(.*\)">.*:\1:p' $$TMP_FILE`; \
-	RootAddressOfProjectInRepository=`sed -n 's#.*<url>'$$RootAddressOfRepository'/\([^/]*\)/.*</url>#\1#p' $$TMP_FILE` ;  \
+	RevisionNumberOfMostRecentChangeOfThisBranchInRepository="0"; \
+	RootAddressOfProjectInRepository=`/` ;  \
 	RootAddressOfProjectInRepository=$$RootAddressOfRepository/$$RootAddressOfProjectInRepository ; \
 	rm -f $$TMP_FILE ; \
 	cp $(REPOSITORYFILESYSTEMINFO_TEMPLATE) $$TMP_FILE ; \
